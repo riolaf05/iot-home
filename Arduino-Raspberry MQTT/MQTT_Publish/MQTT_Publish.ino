@@ -1,6 +1,7 @@
 /*
- * ESP8266 Mosquitto MQTT Publish 
- * Original project by Thomas Varnish (https://github.com/tvarnish), (https://www.instructables.com/member/Tango172)
+ * ESP8266 (Adafruit HUZZAH) Mosquitto MQTT Publish Example
+ * Thomas Varnish (https://github.com/tvarnish), (https://www.instructables.com/member/Tango172)
+ * Made as part of my MQTT Instructable - "How to use MQTT with the Raspberry Pi and ESP8266"
  */
 #include <Bounce2.h> // Used for "debouncing" the pushbutton
 #include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
@@ -16,12 +17,12 @@ const char* wifi_password = "s3wv93bx9pkwd3m5";
 
 // MQTT
 // Make sure to update this for your own MQTT Broker!
-const char* mqtt_server = "192.168.1.7";
-const char* mqtt_topic = "Test";
+const char* mqtt_server = "192.168.1.9";
+const char* mqtt_topic = "test";
 const char* mqtt_username = "pi";
 const char* mqtt_password = "raspberry";
 // The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
-const char* clientID = "esp8266";
+const char* clientID = "Client ID";
 
 // Initialise the Pushbutton Bouncer object
 Bounce bouncer = Bounce();
@@ -78,17 +79,21 @@ void setup() {
 void loop() {
   // Update button state
   // This needs to be called so that the Bouncer object can check if the button has been pressed
-  bouncer.update();
+  /*bouncer.update();
 
   if (bouncer.rose()) {
     // Turn light on when button is pressed down
     // (i.e. if the state of the button rose from 0 to 1 (not pressed to pressed))
     digitalWrite(ledPin, LOW);
-
+*/
     // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
     // Here, "Button pressed!" is the Payload, but this could be changed to a sensor reading, for example.
-    if (client.publish(mqtt_topic, "Button pressed!")) {
-      Serial.println("Button pushed and message sent!");
+    int sensorValue = analogRead(A0); //Legge il valore analogico
+    char cstr[16];
+    Serial.println(sensorValue); //Stampa a schermo il valore
+
+    if (client.publish(mqtt_topic, itoa(sensorValue, cstr, 10))) {
+      Serial.println("message sent!");
     }
     // Again, client.publish will return a boolean value depending on whether it succeded or not.
     // If the message failed to send, we will try again, as the connection may have broken.
@@ -98,10 +103,12 @@ void loop() {
       delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
       client.publish(mqtt_topic, "Button pressed!");
     }
+
+       delay(10000); //Attende 10 secondi
   }
+  /*
   else if (bouncer.fell()) {
     // Turn light off when button is released
     // i.e. if state goes from high (1) to low (0) (pressed to not pressed)
     digitalWrite(ledPin, HIGH);
-  }
-}
+  }*/

@@ -91,8 +91,8 @@ void loop() {
     int sensorValue = analogRead(A0); //Legge il valore analogico
     char cstr[16];
     Serial.println(sensorValue); //Stampa a schermo il valore
-
-    if (client.publish(mqtt_topic, itoa(sensorValue, cstr, 10))) {
+    float percentage_value = (100 * sensorValue)/950;
+    if (client.publish(mqtt_topic, itoa(percentage_value, cstr, 10))) {
       Serial.println("message sent!");
     }
     // Again, client.publish will return a boolean value depending on whether it succeded or not.
@@ -104,7 +104,7 @@ void loop() {
       client.publish(mqtt_topic, "Button pressed!");
     }
 
-       delay(10000); //Attende 10 secondi
+       delay(1000); //Attende 10 secondi
   }
   /*
   else if (bouncer.fell()) {

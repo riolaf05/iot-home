@@ -1,48 +1,47 @@
-"""
-Python MQTT Subscription client
-Thomas Varnish (https://github.com/tvarnish), (https://www.instructables.com/member/Tango172)
-Written for my Instructable - "How to use MQTT with the Raspberry Pi and ESP8266"
-"""
-import paho.mqtt.client as mqtt
+import paho.mqtt.client as paho
+import sys
+import urllib2
+import time
+import datetime
+from time import sleep
+import Adafruit_DHT as dht
 
-# Don't forget to change the variables for the MQTT broker!
-mqtt_username = "pi"
-mqtt_password = "raspberry"
-mqtt_topic = "test"
-mqtt_broker_ip = "192.168.1.7"
+# Enter Your ThingSpeak API key here
+myAPI = 'CTPSMGYK3QGWKV8T'
+# URL where we will send the data, Don't change it
+baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI
 
-client = mqtt.Client()
-# Set the username and password for the MQTT client
-client.username_pw_set(mqtt_username, mqtt_password)
+def on_subscribe(client, userdata, mid, granted_qos):
+    print("Subscribed: "+str(mid)+" "+str(granted_qos))
 
-# These functions handle what happens when the MQTT client connects
-# to the broker, and what happens then the topic receives a message
-def on_connect(client, userdata, rc):
-    # rc is the error code returned when connecting to the broker
-    print "Connected!", str(rc)
-    
-    # Once the client has connected to the broker, subscribe to the topic
-    client.subscribe(mqtt_topic)
-    
 def on_message(client, userdata, msg):
-    # This function is called everytime the topic is published to.
-    # If you want to check each message, and do something depending on
-    # the content, the code to do this should be run in this function
-    
-    print "Topic: ", msg.topic + "\nMessage: " + str(msg.payload)
-    
-    # The message itself is stored in the msg variable
-    # and details about who sent it are stored in userdata
+        try:
+                humi = float(msg.payload)
+                # If Reading is valid
+                if isinstance(humi, float):
+                        # Formatting to two decimal places
+                        humi = '%.2f' % humi                                    
+                        # Sending the data to ThingSpeak
+                        conn = urllib2.urlopen(baseURL + '&field1=%s' % (humi))
+                        ts = time.time()
+                        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+                        print str(st) + ": humidity " + str(humi) + "%"
+                        # Closing the connection
+                        conn.close()
+                else:
+                        print 'Error'
+                # Sesnor (e.g. DHT22) requires 2 seconds to give a reading, so make sure to add delay of above 2 seconds.
+                sleep(20)
+        except:
+                print "connessione persa!"
 
-# Here, we are telling the client which functions are to be run
-# on connecting, and on receiving a message
-client.on_connect = on_connect
+client = paho.Client()
+client.username_pw_set("pi", "raspberry")
+client.on_subscribe = on_subscribe
 client.on_message = on_message
+client.connect("localhost", 1883)
+client.subscribe("test", qos=1)
 
-# Once everything has been set up, we can (finally) connect to the broker
-# 1883 is the listener port that the MQTT broker is using
-client.connect(mqtt_broker_ip, 1883)
+print "connecting.."
 
-# Once we have told the client to connect, let the client object run itself
 client.loop_forever()
-client.disconnect()

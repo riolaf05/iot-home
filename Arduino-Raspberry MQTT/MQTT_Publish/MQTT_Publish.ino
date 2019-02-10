@@ -1,8 +1,3 @@
-/*
- * ESP8266 (Adafruit HUZZAH) Mosquitto MQTT Publish Example
- * Thomas Varnish (https://github.com/tvarnish), (https://www.instructables.com/member/Tango172)
- * Made as part of my MQTT Instructable - "How to use MQTT with the Raspberry Pi and ESP8266"
- */
 #include <Bounce2.h> // Used for "debouncing" the pushbutton
 #include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
@@ -24,24 +19,11 @@ const char* mqtt_password = "raspberry";
 // The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
 const char* clientID = "Client ID";
 
-// Initialise the Pushbutton Bouncer object
-Bounce bouncer = Bounce();
-
 // Initialise the WiFi and MQTT Client objects
 WiFiClient wifiClient;
 PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
 
 void setup() {
-  pinMode(ledPin, OUTPUT);
-  pinMode(buttonPin, INPUT);
-
-  // Switch the on-board LED off to start with
-  digitalWrite(ledPin, HIGH);
-
-  // Setup pushbutton Bouncer object
-  bouncer.attach(buttonPin);
-  bouncer.interval(5);
-
   // Begin Serial on 115200
   // Remember to choose the correct Baudrate on the Serial monitor!
   // This is just for debugging purposes
@@ -58,7 +40,6 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-
   // Debugging - Output the IP Address of the ESP8266
   Serial.println("WiFi connected");
   Serial.print("IP address: ");
@@ -73,26 +54,17 @@ void setup() {
   else {
     Serial.println("Connection to MQTT Broker failed...");
   }
-  
 }
 
 void loop() {
-  // Update button state
-  // This needs to be called so that the Bouncer object can check if the button has been pressed
-  /*bouncer.update();
-
-  if (bouncer.rose()) {
-    // Turn light on when button is pressed down
-    // (i.e. if the state of the button rose from 0 to 1 (not pressed to pressed))
-    digitalWrite(ledPin, LOW);
-*/
+  
     // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
-    // Here, "Button pressed!" is the Payload, but this could be changed to a sensor reading, for example.
-    int sensorValue = analogRead(A0); //Legge il valore analogico
+    
+    // CHANGE the funcyion according to the sensor you want to use! <<< HERE
+    float output_value = moistureSensor(A0);
+
     char cstr[16];
-    Serial.println(sensorValue); //Stampa a schermo il valore
-    float percentage_value = (100 * sensorValue)/950;
-    if (client.publish(mqtt_topic, itoa(percentage_value, cstr, 10))) {
+    if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
       Serial.println("message sent!");
     }
     // Again, client.publish will return a boolean value depending on whether it succeded or not.
@@ -104,11 +76,21 @@ void loop() {
       client.publish(mqtt_topic, "Button pressed!");
     }
 
-       delay(1000); //Attende 10 secondi
+       delay(1000); //Wait 10 secs
   }
-  /*
-  else if (bouncer.fell()) {
-    // Turn light off when button is released
-    // i.e. if state goes from high (1) to low (0) (pressed to not pressed)
-    digitalWrite(ledPin, HIGH);
-  }*/
+
+float moistureSensor(char inputPin){
+    int sensorValue = analogRead(inputPin); //Read the analog value
+    Serial.println(sensorValue); //Print the value on serial monitor
+    float percentage_value = (100 * sensorValue)/950;  
+    return percentage_value;
+}
+
+int relayInput(char inputPin){
+  //TODO
+}
+
+int genericSensor(char inputPin){
+  //TODO
+}
+

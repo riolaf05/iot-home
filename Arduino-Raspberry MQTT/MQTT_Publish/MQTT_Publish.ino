@@ -76,7 +76,7 @@ void loop() {
       client.publish(mqtt_topic, "Button pressed!");
     }
 
-       delay(1000); //Attende 10 secondi
+       delay(1000); //Wait 10 secs
   }
 
 float moistureSensor(char inputPin){
@@ -86,4 +86,11 @@ float moistureSensor(char inputPin){
     return percentage_value;
 }
 
+int relayInput(char inputPin){
+  //TODO
+}
+
+int genericSensor(char inputPin){
+  //TODO
+}
 

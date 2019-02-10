@@ -6,7 +6,7 @@ import datetime
 from time import sleep
 import Adafruit_DHT as dht
 
-# Enter Your API key here
+# Enter Your ThingSpeak API key here
 myAPI = 'CTPSMGYK3QGWKV8T'
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI

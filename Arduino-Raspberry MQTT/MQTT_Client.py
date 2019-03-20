@@ -4,7 +4,7 @@ import urllib2
 import time
 import datetime
 from time import sleep
-import Adafruit_DHT as dht
+#import Adafruit_DHT as dht
 
 # Enter Your ThingSpeak API key here
 myAPI = 'CTPSMGYK3QGWKV8T'

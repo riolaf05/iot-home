@@ -9,4 +9,4 @@ docker run eclipse-mosquitto
 ### Run as a Docker
 docker build -t python-mqtt . (only first time)
 
-docker run -p localhost:1883:1883 python-mqtt (TODO: is is right??)
+docker run python-mqtt (launch MQTT broker on 1883 first)

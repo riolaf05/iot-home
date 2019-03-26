@@ -5,8 +5,8 @@ RUN pip install paho-mqtt
 
 WORKDIR mqtt_client
 
-COPY ./Arduino-Raspberry MQTT/MQTT_Client.py mqtt_client/
+COPY ./Arduino-Raspberry_MQTT/MQTT_Client.py mqtt_client/
 
 EXPOSE 1883
 
-CMD [ "python", "./MQTT_Client.py" ]
+CMD [ "python", "mqtt_client/MQTT_Client.py" ]

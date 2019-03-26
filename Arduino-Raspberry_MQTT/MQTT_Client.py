@@ -39,11 +39,9 @@ client = paho.Client()
 client.username_pw_set("pi", "raspberry")
 client.on_subscribe = on_subscribe
 client.on_message = on_message
-try:
-        client.connect("localhost", 1883)
-        client.subscribe("test", qos=1)
-        print "connecting.."
+client.connect("localhost", 1883)
+client.subscribe("test", qos=1)
 
-        client.loop_forever()
-except Exception:
-        print "no MQTT broker found!"
+print "connecting.."
+
+client.loop_forever()

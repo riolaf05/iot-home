@@ -14,8 +14,8 @@ const char* wifi_password = "s3wv93bx9pkwd3m5";
 // Make sure to update this for your own MQTT Broker!
 const char* mqtt_server = "192.168.1.9";
 const char* mqtt_topic = "test";
-const char* mqtt_username = "pi";
-const char* mqtt_password = "raspberry";
+const char* mqtt_username = "rio";
+const char* mqtt_password = "onslario89";
 // The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
 const char* clientID = "Client ID";
 

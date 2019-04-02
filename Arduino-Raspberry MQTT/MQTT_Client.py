@@ -36,7 +36,7 @@ def on_message(client, userdata, msg):
                 print "connessione persa!"
 
 client = paho.Client()
-client.username_pw_set("pi", "raspberry")
+client.username_pw_set("rio", "onslario89")
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 client.connect("localhost", 1883)

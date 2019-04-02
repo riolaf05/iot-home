@@ -7,6 +7,4 @@ WORKDIR mqtt_client
 
 COPY ./Arduino-Raspberry_MQTT/MQTT_Client.py mqtt_client/
 
-EXPOSE 1883
-
 CMD [ "python", "mqtt_client/MQTT_Client.py" ]

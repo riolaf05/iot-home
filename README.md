@@ -10,3 +10,6 @@ docker run eclipse-mosquitto
 docker build -t python-mqtt-rio-client . (only first time)
 
 docker run --net=host --restart unless-stopped -d python-mqtt (launch MQTT broker on 1883 first)
+
+### TODO: add external configuration file!
+

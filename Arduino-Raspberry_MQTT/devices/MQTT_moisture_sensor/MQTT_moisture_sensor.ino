@@ -21,7 +21,7 @@ const char* mqtt_password = "onslario89";
 const char* clientID = "Client ID";
 
 // Time to sleep (in seconds):
-const int sleepTimeS = 1;
+const int sleepTimeS =300;
 
 // Initialise the WiFi and MQTT Client objects
 WiFiClient wifiClient;
@@ -59,38 +59,36 @@ void setup() {
   else {
     Serial.println("Connection to MQTT Broker failed...");
   }
+
+  //BEGIN OF LOOP FUNCTION (PUT IT HERE DUE TO DEEP-SLEEP MODE ////////////
+  // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
+  // CHANGE the function according to the sensor you want to use! <<< HERE
+  float output_value = moistureSensor(A0);
+  char cstr[16];
+  if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
+    Serial.println("message sent!");
+  }
+  // Again, client.publish will return a boolean value depending on whether it succeded or not.
+  // If the message failed to send, we will try again, as the connection may have broken.
+  else {
+    Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
+    client.connect(clientID, mqtt_username, mqtt_password);
+    delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
+    client.publish(mqtt_topic, itoa(output_value, cstr, 10));
+  }
+     delay(5000);
+  //END OF LOOP FUNCTION //////////////////////////////////////////////////
+  
+  Serial.println("Deep sleep mode for sleepTimeS * microseconds");
+  ESP.deepSleep(sleepTimeS * 1000000); 
 }
 
 void loop() {
-  
-    // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
-    
-    // CHANGE the function according to the sensor you want to use! <<< HERE
-    float output_value = moistureSensor(A0);
-
-    char cstr[16];
-    if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
-      Serial.println("message sent!");
-    }
-    // Again, client.publish will return a boolean value depending on whether it succeded or not.
-    // If the message failed to send, we will try again, as the connection may have broken.
-    else {
-      Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
-      client.connect(clientID, mqtt_username, mqtt_password);
-      delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-      client.publish(mqtt_topic, itoa(output_value, cstr, 10));
-    }
-
-       Serial.println();
-       Serial.println("closing connection");
-
-       // Sleep
-       Serial.println("ESP8266 in sleep mode");
-       ESP.deepSleep(sleepTimeS * 1000000);
   }
 
 float moistureSensor(char inputPin){
     int sensorValue = analogRead(inputPin); //Read the analog value
+    Serial.print("Analog value : ");
     Serial.println(sensorValue); //Print the value on serial monitor
     int percentage_value = map(sensorValue,550,10,0,100);
     Serial.print("Mositure : ");

@@ -12,6 +12,7 @@ const char* wifi_password = "s3wv93bx9pkwd3m5";
 
 // MQTT
 // Make sure to update this for your own MQTT Broker!
+// TODO: externalize parameters!!!
 const char* mqtt_server = "192.168.1.9";
 const char* mqtt_topic = "test";
 const char* mqtt_username = "rio";
@@ -19,9 +20,13 @@ const char* mqtt_password = "onslario89";
 // The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
 const char* clientID = "Client ID";
 
+// Time to sleep (in seconds):
+const int sleepTimeS = 10;
+
 // Initialise the WiFi and MQTT Client objects
 WiFiClient wifiClient;
 PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
+
 
 void setup() {
   // Begin Serial on 115200
@@ -60,7 +65,7 @@ void loop() {
   
     // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
     
-    // CHANGE the funcyion according to the sensor you want to use! <<< HERE
+    // CHANGE the function according to the sensor you want to use! <<< HERE
     float output_value = moistureSensor(A0);
 
     char cstr[16];
@@ -73,10 +78,17 @@ void loop() {
       Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
       client.connect(clientID, mqtt_username, mqtt_password);
       delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-      client.publish(mqtt_topic, "Button pressed!");
+      client.publish(mqtt_topic, itoa(output_value, cstr, 10));
     }
 
        delay(1000); //Wait 10 secs
+
+       Serial.println();
+       Serial.println("closing connection");
+
+       // Sleep
+       Serial.println("ESP8266 in sleep mode");
+       ESP.deepSleep(sleepTimeS * 1000000);
   }
 
 float moistureSensor(char inputPin){

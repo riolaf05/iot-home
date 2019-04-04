@@ -21,7 +21,7 @@ const char* mqtt_password = "onslario89";
 const char* clientID = "Client ID";
 
 // Time to sleep (in seconds):
-const int sleepTimeS = 10;
+const int sleepTimeS = 1;
 
 // Initialise the WiFi and MQTT Client objects
 WiFiClient wifiClient;
@@ -81,8 +81,6 @@ void loop() {
       client.publish(mqtt_topic, itoa(output_value, cstr, 10));
     }
 
-       delay(1000); //Wait 10 secs
-
        Serial.println();
        Serial.println("closing connection");
 
@@ -94,8 +92,11 @@ void loop() {
 float moistureSensor(char inputPin){
     int sensorValue = analogRead(inputPin); //Read the analog value
     Serial.println(sensorValue); //Print the value on serial monitor
-    float percentage_value = (100 * sensorValue)/950;  
-    return percentage_value;
+    int percentage_value = map(sensorValue,550,10,0,100);
+    Serial.print("Mositure : ");
+    Serial.print(percentage_value + 87);
+    Serial.println("%");
+    return percentage_value+87;
 }
 
 int relayInput(char inputPin){

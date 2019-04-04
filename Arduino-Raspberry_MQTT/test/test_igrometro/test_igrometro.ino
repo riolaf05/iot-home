@@ -1,3 +1,7 @@
+int sensor_pin = A0; // Soil Sensor input at Analog PIN A0
+
+int output_value ;
+
 void setup() {
   // put your setup code here, to run once:
     Serial.begin(9600);
@@ -5,8 +9,16 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int sensorValue = analogRead(A0); //Legge il valore analogico
-  //float percentage_value = (100 * sensorValue)/950;
-  Serial.println(sensorValue); //Stampa a schermo il valore
+  output_value= analogRead(sensor_pin);
+
+   output_value = map(output_value,550,10,0,100);
+
+   Serial.print("Mositure : ");
+
+   Serial.print(output_value + 87);
+
+   Serial.println("%");
+
+   delay(1000);
     
 }

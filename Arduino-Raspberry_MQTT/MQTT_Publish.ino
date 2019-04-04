@@ -58,39 +58,6 @@ void setup() {
 
 void loop() {
   
-    // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
     
-    // CHANGE the funcyion according to the sensor you want to use! <<< HERE
-    float output_value = moistureSensor(A0);
-
-    char cstr[16];
-    if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
-      Serial.println("message sent!");
-    }
-    // Again, client.publish will return a boolean value depending on whether it succeded or not.
-    // If the message failed to send, we will try again, as the connection may have broken.
-    else {
-      Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
-      client.connect(clientID, mqtt_username, mqtt_password);
-      delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-      client.publish(mqtt_topic, "Button pressed!");
-    }
-
-       delay(1000); //Wait 10 secs
-  }
-
-float moistureSensor(char inputPin){
-    int sensorValue = analogRead(inputPin); //Read the analog value
-    Serial.println(sensorValue); //Print the value on serial monitor
-    float percentage_value = (100 * sensorValue)/950;  
-    return percentage_value;
-}
-
-int relayInput(char inputPin){
-  //TODO
-}
-
-int genericSensor(char inputPin){
-  //TODO
 }
 

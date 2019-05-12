@@ -1,8 +1,16 @@
 #include <WiFi.h>
+#include <PubSubClient.h>
 
 const char* wifi_name = "Vodafone-A41502247"; // Your Wifi network name here
 const char* wifi_pass = "s3wv93bx9pkwd3m5";    // Your Wifi network password here
+const char* mqttServer = "192.168.1.9";
+const int mqttPort = 1883;
+const char* mqttUser = "rio";
+const char* mqttPassword = "onslario89";
+
 WiFiServer server(80);    // Server will be at port 80
+WiFiClient espClient;
+PubSubClient client(espClient);
 
 int relay_pin = 2;
 

@@ -65,12 +65,39 @@ void setup() {
  
 void loop() {
   client.loop();
-  //callback;
+ //callback; //CHANGE!!
 }
 
 
 void callback(char* topic, byte* payload, unsigned int length) {
 
   //convert topic to string to make it easier to work with
-  //TODO
+  Serial.print("Message arrived on topic: ");
+  Serial.print(topic);
+  Serial.print(". Message: ");
+  String messageTemp;
+  
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)message[i]);
+    messageTemp += (char)message[i];
   }
+  Serial.println();
+
+  // Feel free to add more if statements to control more GPIOs with MQTT
+
+  // If a message is received on the topic esp32/output, you check if the message is either "on" or "off". 
+  // Changes the output state according to the message
+  if (String(topic) == "esp32/output") {
+    Serial.print("Changing output to ");
+    if(messageTemp == "on"){
+      Serial.println("on");
+      Serial.println("Activating device!!") //CHANGE
+    }
+    else if(messageTemp == "off"){
+      Serial.println("off");
+      Serial.println("Deactivating device!!") //CHANGE
+    }
+  }
+}
+
+  

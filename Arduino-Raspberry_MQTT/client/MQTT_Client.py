@@ -4,6 +4,7 @@ import urllib2
 import time
 import datetime
 from time import sleep
+from on_messages import on_message_test
 #import Adafruit_DHT as dht
 
 # Enter Your ThingSpeak API key here
@@ -35,6 +36,10 @@ def on_message(client, userdata, msg):
         except:
                 print "connessione persa!"
 
+'''
+This script is used to listen on MQTT port 1883 and trigger the "on_message_xxx" methods
+which actually publishes on ThingSpeak or other front end objects.  
+'''
 client = paho.Client()
 client.username_pw_set("rio", "onslario89")
 client.on_subscribe = on_subscribe

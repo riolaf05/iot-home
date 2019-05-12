@@ -65,4 +65,12 @@ void setup() {
  
 void loop() {
   client.loop();
+  //callback;
 }
+
+
+void callback(char* topic, byte* payload, unsigned int length) {
+
+  //convert topic to string to make it easier to work with
+  //TODO
+  }

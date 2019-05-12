@@ -2,8 +2,8 @@
 #include <PubSubClient.h>
 
 // WiFi
-const char* ssid = "Vodafone-A41502247";
-const char* wifi_password =  "s3wv93bx9pkwd3m5";
+char* ssid = "Vodafone-A41502247";
+char* wifi_password =  "s3wv93bx9pkwd3m5";
 // MQTT
 // TODO: externalize parameters!!!
 const char* mqttServer = "192.168.1.9";

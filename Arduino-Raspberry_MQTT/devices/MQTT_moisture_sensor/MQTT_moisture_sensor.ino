@@ -60,9 +60,14 @@ void setup() {
     Serial.println("Connection to MQTT Broker failed...");
   }
 
-  //BEGIN OF LOOP FUNCTION (PUT IT HERE DUE TO DEEP-SLEEP MODE ////////////
+  //BEGIN OF "ONCE-WAS-LOOP" FUNCTION (PUT IT HERE DUE TO DEEP-SLEEP MODE ////////////
+  // The "loop" function has been moved here because, shoarting the 
+  // "D0" pin to ground, the NodeMCU will be restarted every time
+  // the "begin" function has finished. 
+  // This allows to put the NodeMCU to sleep for a given time!
+  
   // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
-  // CHANGE the function according to the sensor you want to use! <<< HERE
+  // TODO: CHANGE the function according to the sensor you want to use! <<< HERE
   float output_value = moistureSensor(A0);
   char cstr[16];
   if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
@@ -77,7 +82,7 @@ void setup() {
     client.publish(mqtt_topic, itoa(output_value, cstr, 10));
   }
      delay(5000);
-  //END OF LOOP FUNCTION //////////////////////////////////////////////////
+  //END OF "ONCE-WAS-LOOP" FUNCTION //////////////////////////////////////////////////
   
   Serial.println("Deep sleep mode for sleepTimeS * microseconds");
   ESP.deepSleep(sleepTimeS * 1000000); 

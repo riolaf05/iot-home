@@ -1,4 +1,4 @@
-#include <WiFi.h>
+#include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
 // WiFi
@@ -46,7 +46,7 @@ void setup() {
     }
   }
  
-  client.publish("esp/test", "Hello from ESP32");
+  client.publish("test", "Hello from ESP32");
  
 }
  

@@ -90,12 +90,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if (String(topic) == "esp32/output") {
     Serial.print("Changing output to ");
     if(messageTemp == "on"){
-      Serial.println("on");
-      Serial.println("Activating device!!") //CHANGE
+      Serial.println("Activating device!!") 
+      //Add behavior
     }
     else if(messageTemp == "off"){
-      Serial.println("off");
-      Serial.println("Deactivating device!!") //CHANGE
+      Serial.println("Deactivating device!!") 
+      //Add behaviour
     }
   }
 }

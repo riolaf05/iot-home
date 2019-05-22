@@ -1,0 +1,21 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: mqtt-sub
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mqtt-sub
+    spec:
+      containers:
+      - name: mqtt-sub
+        image: "rio05docker/mqtt-sub:1.0"
+        volumeMounts:
+        - name: mqtt-sub
+          mountPath: /app/
+      #volumes:
+      #- name: counter
+      #  persistentVolumeClaim:
+      #    claimName: counter

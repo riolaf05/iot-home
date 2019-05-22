@@ -1,4 +1,4 @@
-# iot-home
+# IoT-home
 it containts scripts from my home iot platform
 
 # MQTT broker

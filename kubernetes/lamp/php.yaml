@@ -85,7 +85,7 @@ metadata:
   # using the host web.default.svc.cluster.local from within the cluster
   name: web
   labels:
-    "heptio.com/example": lamp
+    "rio/iotplatform": lamp
 spec:
   ports:
   # make the service available on this port

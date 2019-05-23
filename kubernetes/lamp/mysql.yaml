@@ -13,7 +13,7 @@ metadata:
   # is referenced by the Deployment in volumes: persistentVolumeClaim: claimName
   name: database
   labels:
-    "heptio.com/example": lamp
+    "rio/iotplatform": lamp
   annotations:
     # we want AWS to handle provisioning a volume with sane defaults
     # https://kubernetes.io/docs/concepts/storage/persistent-volumes/#writing-portable-configuration
@@ -35,7 +35,7 @@ kind: Deployment
 metadata:
   name: mysql
   labels:
-    "heptio.com/example": lamp
+    "rio/iotplatform": lamp
 spec:
   # number of MySQL pods (replicas) to run
   replicas: 1
@@ -132,7 +132,7 @@ metadata:
   # using the host mysql.default.svc.cluster.local from within the cluster
   name: mysql
   labels:
-    "heptio.com/example": lamp
+    "rio/iotplatform": lamp
 spec:
   # allows us to set our own internal IP to reference this pod
   # in this case we care about the port

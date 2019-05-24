@@ -1,43 +1,43 @@
 # By Sharon Campbell, Ken Simon, and Joe Beda for Heptio
-#deploy the PHP and Apache container from heptio/example-php-dbconnect
+#deploy the PHP and Apache container from heptio/example-web_server_panel
 
 apiVersion: extensions/v1beta1
 # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 kind: Deployment
 metadata:
-  name: php-dbconnect
+  name: web_server_panel
   labels:
-    heptio.com/example: lamp
+    rio/iotplatform: lamp
 # number of PHP pods (replicas) to run
 # increase this number if you need to scale PHP horizontally
 # since we have 3, the LoadBalancer will serve our app from all 3
 spec:
-  replicas: 3
+  replicas: 2
   # The number of old deployments you want to keep around
   revisionHistoryLimit: 5
-  # make replicas of kubernetes objects with the label app: php-dbconnect
+  # make replicas of kubernetes objects with the label app: web_server_panel
   selector:
     matchLabels:
-      app: php-dbconnect
+      app: web_server_panel
   # the pod template describes what type of pod to create
   # when the defined number of replicas are not up
-  # in this case, the pod that will be created is the one labeled app: php-dbconnect
+  # in this case, the pod that will be created is the one labeled app: web_server_panel
   template:
     metadata:
       # this label is referenced by the selector for the Deployment, which creates pods
       # and by the selector for the Service, which creates the LoadBalancer
       labels:
-        app: php-dbconnect
+        app: web_server_panel
     # details of what container(s) will actually be run in this pod
     spec:
       # deploys PHP and Apache and our custom application from the specified Docker Hub image
       containers:
       # deploys this custom PHP image from Docker Hub
-      # https://hub.docker.com/r/heptio/example-php-dbconnect/
-      - image: heptio/example-php-dbconnect
+      # https://hub.docker.com/r/rio05docker/web_server_panel/
+      - image: rio05docker/web_server_panel:first_test
         # download a fresh copy of the image if available, even if it has the same version label
         imagePullPolicy: Always
-        name: php-dbconnect
+        name: web_server_panel
         #reserving resources from our cluster
         resources:
           requests:
@@ -91,9 +91,11 @@ spec:
   # make the service available on this port
   - port: 80
     protocol: TCP
+  - port: 443
+    protocol: TCP
   selector:
     # apply this service to the pod with the label app: mysql
-    app: php-dbconnect
+    app: web_server_panel
   # a LoadBalancer makes this service available over the public internet
   # all of our PHP/Apache pods are load balanced behind a single public network address
 
@@ -106,4 +108,4 @@ spec:
 
   # https://kubernetes.io/docs/getting-started-guides/scratch/#cloud-providers
   # https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
-  type: LoadBalancer
+  type: ClusterIP 

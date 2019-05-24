@@ -1,11 +1,11 @@
 # By Sharon Campbell, Ken Simon, and Joe Beda for Heptio
-#deploy the PHP and Apache container from heptio/example-web_server_panel
+#deploy the PHP and Apache container from rio05docker/web_server_panel
 
 apiVersion: extensions/v1beta1
 # https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 kind: Deployment
 metadata:
-  name: web_server_panel
+  name: web-server-panel
   labels:
     rio/iotplatform: lamp
 # number of PHP pods (replicas) to run
@@ -18,7 +18,7 @@ spec:
   # make replicas of kubernetes objects with the label app: web_server_panel
   selector:
     matchLabels:
-      app: web_server_panel
+      app: web-server-panel
   # the pod template describes what type of pod to create
   # when the defined number of replicas are not up
   # in this case, the pod that will be created is the one labeled app: web_server_panel
@@ -27,7 +27,7 @@ spec:
       # this label is referenced by the selector for the Deployment, which creates pods
       # and by the selector for the Service, which creates the LoadBalancer
       labels:
-        app: web_server_panel
+        app: web-server-panel
     # details of what container(s) will actually be run in this pod
     spec:
       # deploys PHP and Apache and our custom application from the specified Docker Hub image
@@ -37,7 +37,7 @@ spec:
       - image: rio05docker/web_server_panel:first_test
         # download a fresh copy of the image if available, even if it has the same version label
         imagePullPolicy: Always
-        name: web_server_panel
+        name: web-server-panel
         #reserving resources from our cluster
         resources:
           requests:
@@ -83,19 +83,21 @@ kind: Service
 metadata:
   # the name web here means you can reference the PHP pods
   # using the host web.default.svc.cluster.local from within the cluster
-  name: web
+  name: panel
   labels:
     "rio/iotplatform": lamp
 spec:
   ports:
   # make the service available on this port
-  - port: 80
+  - name: http
     protocol: TCP
-  - port: 443
+    port: 80
+  - name: https
     protocol: TCP
+    port: 443
   selector:
     # apply this service to the pod with the label app: mysql
-    app: web_server_panel
+    app: web-server-panel
   # a LoadBalancer makes this service available over the public internet
   # all of our PHP/Apache pods are load balanced behind a single public network address
 
@@ -108,4 +110,4 @@ spec:
 
   # https://kubernetes.io/docs/getting-started-guides/scratch/#cloud-providers
   # https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
-  type: ClusterIP 
+  type: NodePort 

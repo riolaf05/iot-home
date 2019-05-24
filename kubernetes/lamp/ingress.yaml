@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: panel-rio
+spec:
+  rules:
+  - host: controlpanel.rio.com
+    http:
+      paths:
+      - backend:
+          serviceName: panel
+          servicePort: 80
+ 

@@ -39,6 +39,11 @@ void setup() {
   }
   Serial.println("Connected to the WiFi network");
 
+  void callback(char* topic, byte* payload, unsigned int length);
+  //The callback function is executed when a message is received for a subscribed topic. 
+  //The arguments of this callback function are the name of the topic, 
+  //the payload (in bytes) and the length of the message received. The message should also return void.
+
   //MQTT Broker Connection
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
@@ -65,39 +70,8 @@ void setup() {
  
 void loop() {
   client.loop();
- //callback; //CHANGE!!
 }
 
 
-void callback(char* topic, byte* payload, unsigned int length) {
-
-  //convert topic to string to make it easier to work with
-  Serial.print("Message arrived on topic: ");
-  Serial.print(topic);
-  Serial.print(". Message: ");
-  String messageTemp;
-  
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)message[i]);
-    messageTemp += (char)message[i];
-  }
-  Serial.println();
-
-  // Feel free to add more if statements to control more GPIOs with MQTT
-
-  // If a message is received on the topic esp32/output, you check if the message is either "on" or "off". 
-  // Changes the output state according to the message
-  if (String(topic) == "esp32/output") {
-    Serial.print("Changing output to ");
-    if(messageTemp == "on"){
-      Serial.println("Activating device!!") 
-      //Add behavior
-    }
-    else if(messageTemp == "off"){
-      Serial.println("Deactivating device!!") 
-      //Add behaviour
-    }
-  }
-}
 
   

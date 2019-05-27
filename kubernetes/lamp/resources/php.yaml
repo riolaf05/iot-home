@@ -10,7 +10,7 @@ metadata:
     rio/iotplatform: lamp
 # number of PHP pods (replicas) to run
 # increase this number if you need to scale PHP horizontally
-# since we have 3, the LoadBalancer will serve our app from all 3
+# since we have 2, the LoadBalancer will serve our app from all 2
 spec:
   replicas: 2
   # The number of old deployments you want to keep around
@@ -73,7 +73,10 @@ spec:
         # make our mysql pod available within the cluster on port 80
         ports:
         - containerPort: 80
-
+      volumes:
+      - name: panel-storage
+        persistentVolumeClaim:
+          claimName: panel-pv-claim
 ---
 # expose PHP and Apache on port 80 to the world through a load balancer
 

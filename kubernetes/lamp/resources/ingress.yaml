@@ -4,11 +4,10 @@ metadata:
   name: panel-rio
 spec:
  rules:
- - host: controlpanel.rio.com
+ - host: conrolpanel.rio.com
    http:
      paths:
      - path: /*
        backend:
          serviceName: panel
          servicePort: 80
- 

@@ -1,13 +1,13 @@
-piVersion: v1
+apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
   labels:
-    app: nginx
+    app: mqtt-module
+  name: mqtt-svc
+  namespace: mqtt
 spec:
+  type: NodePort
   ports:
-  - port: 80
-    name: web
-  clusterIP: None
+     - port: 1833
   selector:
-    app: apache2
+    app: mqtt-module

@@ -1,4 +1,4 @@
-FROM python:2.7
+FROM arm32v7/ubuntu:16.04
 
 RUN mkdir mqtt_client
 RUN pip install paho-mqtt

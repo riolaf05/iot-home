@@ -11,10 +11,10 @@ spec:
     spec:
       containers:
       - name: mqtt-sub
-        image: "rio05docker/mqtt-sub:rpi3_latest"
-        volumeMounts:
-        - name: mqtt-sub
-          mountPath: /app/
+        image: "python-mqtt-rio-client:rpi3_latest"
+        #volumeMounts:
+        #- name: mqtt-sub
+          #mountPath: /app/
       #volumes:
       #- name: counter
       #  persistentVolumeClaim:

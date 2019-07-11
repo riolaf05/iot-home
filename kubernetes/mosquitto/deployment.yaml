@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mosquitto
+  labels:
+    "rio/iotplatform": mosquitto
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+      - name: mosquitto
+        image: dromer1967/arm32v7-mosquitto
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 0.5
+            memory: 500Mi
+        ports:
+        - containerPort: 9001
+        - containerPort: 8883
+        volumeMounts:
+        - name: mosquitto-data
+          mountPath: /srv/mqtt/data
+        - name: mosquitto-log
+          mountPath: /srv/mqtt/log
+      volumes:
+      - name: mosquitto-pv-data
+        persistentVolumeClaim:
+          claimName: mosquitto-pv-data-claim
+      - name: mosquitto-log
+        persistentVolumeClaim:
+          claimName: mosquitto-pv-data-claim
+ 

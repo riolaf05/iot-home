@@ -1,0 +1,32 @@
+apiVersion: v1
+# https://kubernetes.io/docs/concepts/services-networking/service/
+kind: Service
+metadata:
+  # the name web here means you can reference the PHP pods
+  # using the host web.default.svc.cluster.local from within the cluster
+  name: panel
+  labels:
+    "rio/iotplatform": mosquitto
+spec:
+  ports:
+  - name: mosquitto
+    port: 1883
+  - name: mosquitto-web
+    port: 80
+    targetPort: 9001
+  selector:
+    # apply this service to the pod with the label app: mysql
+    app: mosquitto
+  # a LoadBalancer makes this service available over the public internet
+  # all of our PHP/Apache pods are load balanced behind a single public network address
+
+  # this works because we have cloudprovider=aws set on the cluster
+  # this actually provisions AWS Elastic Load Balancing https://aws.amazon.com/elasticloadbalancing/
+  # try running "kubectl get service web -o wide" after you create the Service
+  # You'll get a lengthy DNS name which you can use with a DNS CNAME entry with your own domain
+  # like http://xxxxxxxxxxxxxxx.us-east-2.elb.amazonaws.com/
+  # this is where the PHP app will be publicly viewable
+
+  # https://kubernetes.io/docs/getting-started-guides/scratch/#cloud-providers
+  # https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
+  type: ClusterIP 

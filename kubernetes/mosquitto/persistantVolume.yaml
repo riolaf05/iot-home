@@ -1,0 +1,32 @@
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mosquitto-data-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 50Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mosquitto/data 
+---
+
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mosquitto-log-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 25Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mosquitto/log

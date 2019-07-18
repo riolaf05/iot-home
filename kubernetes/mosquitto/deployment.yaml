@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: mosquitto
   labels:
-    "rio/iotplatform": mosquitto
+    "app": mosquitto
 spec:
   replicas: 1
   template:
@@ -20,18 +20,16 @@ spec:
             cpu: 0.5
             memory: 500Mi
         ports:
-        - containerPort: 9001
-        - containerPort: 8883
+        - containerPort: 1883
         volumeMounts:
-        - name: mosquitto-data
+        - name: mosquitto-data-volume
           mountPath: /srv/mqtt/data
-        - name: mosquitto-log
+        - name: mosquitto-log-volume
           mountPath: /srv/mqtt/log
       volumes:
-      - name: mosquitto-pv-data
+      - name: mosquitto-data-volume
         persistentVolumeClaim:
           claimName: mosquitto-pv-data-claim
-      - name: mosquitto-log
+      - name: mosquitto-log-volume
         persistentVolumeClaim:
-          claimName: mosquitto-pv-data-claim
- 
+          claimName: mosquitto-pv-log-claim

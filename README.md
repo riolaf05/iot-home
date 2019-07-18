@@ -1,6 +1,10 @@
 # IoT-home
 it containts scripts from my home iot platform
 
+## Installation 
+
+* Add /mosquitto/data and /mosquitto/log
+
 # MQTT broker
 
 docker run eclipse-mosquitto

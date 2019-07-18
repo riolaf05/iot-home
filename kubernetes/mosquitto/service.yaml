@@ -3,14 +3,14 @@ kind: Service
 metadata:
   name: rpi-mosquitto
   labels:
-    rioiotplatform: mosquitto
+    app: mosquitto
 spec:
   ports:
   - name: mqtt
     protocol: TCP
     port: 1883
     targetPort: 1883
-  loadBalancerIP: 192.168.1.101
+  loadBalancerIP: 192.168.1.102
   selector:
     app: rpi-mosquitto
   type: LoadBalancer

@@ -20,9 +20,9 @@ RUN apt-get update \
 
 RUN pip install paho-mqtt
 
-RUN mkdir /home/ubuntu/scripts
+RUN mkdir $HOME/scripts
 
-COPY MQTT_Client.py /home/ubuntu/scripts/
+COPY MQTT_Client.py $HOME/scripts/
 
-CMD [ "python3", "/home/ubuntu/scripts/MQTT_Client.py" ]
+CMD [ "python3", "$HOME/scripts/MQTT_Client.py" ]
 

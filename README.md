@@ -3,9 +3,13 @@ it containts scripts from my home iot platform
 
 ## Installation 
 
-* Add /mosquitto/data and /mosquitto/log
+* Add /mosquitto/data and /mosquitto/log folders 
 
-# MQTT broker
+* Install Mosquitto Broker and IoT devices
+
+### Install MQTT broker
+
+bash iot-home/kubernetes/mosquitto/build.sh
 
 docker run eclipse-mosquitto
 

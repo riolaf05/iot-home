@@ -1,11 +1,28 @@
 # IoT-home
 it containts scripts from my home iot platform
 
-# MQTT broker
+## MQTT broker
 
+### Run with Kubernetes
+
+```console
+kubernetes/mosquitto/build.sh
+```
+
+### Run as a Docker
+
+```console
 docker run eclipse-mosquitto
+```
 
-## Deploy MQTT client 
+## Deploy MQTT client (Python scripts)
+
+### Run with Kubernetes
+
+```console
+kubernetes/<script>/build.sh
+```
+
 ### Run as a Docker
 
 ```console

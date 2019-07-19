@@ -24,5 +24,7 @@ RUN mkdir $HOME/scripts
 
 COPY MQTT_Client.py $HOME/scripts/
 
+COPY ./on_messages.py $HOME/scripts/
+
 CMD [ "python", "$HOME/scripts/MQTT_Client.py" ]
 

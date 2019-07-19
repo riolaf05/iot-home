@@ -5,10 +5,12 @@ metadata:
   labels:
     app: mosquitto
 spec:
+  type: NodePort
   ports:
   - name: mqtt
     protocol: TCP
     port: 1883
     targetPort: 1883
+    nodePort: 30000
   selector:
     app: rpi-mosquitto

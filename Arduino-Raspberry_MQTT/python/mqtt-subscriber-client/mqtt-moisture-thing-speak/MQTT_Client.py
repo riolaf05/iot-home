@@ -45,7 +45,7 @@ client.username_pw_set("rio", "onslario89")
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 try:
-        client.connect("localhost", 1883)
+        client.connect("rpi-mosquitto", 1883)
         client.subscribe("test", qos=1)
         print "connecting.."
 

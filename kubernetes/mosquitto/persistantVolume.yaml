@@ -13,6 +13,14 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /mosquitto/data 
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - raspberrypi
 ---
 
 
@@ -30,3 +38,11 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /mosquitto/log
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - raspberrypi

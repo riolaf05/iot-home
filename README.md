@@ -5,25 +5,31 @@ it containts scripts from my home iot platform
 
 * Add /mosquitto/data and /mosquitto/log folders 
 
-* Install Mosquitto Broker and IoT devices
+* Install Mosquitto Broker and IoT clients to communicate with Arduino devices
 
-### Install MQTT broker
+## MQTT broker
 
-* Kubernetes: 
+### Run with Kubernetes
+
 ```console
-bash iot-home/kubernetes/mosquitto/build.sh
+kubernetes/mosquitto/build.sh
 ```
-* Docker:
+
+### Run as a Docker
+
 ```console
 docker run eclipse-mosquitto
 ```
 
-### Deploy MQTT client 
+## Deploy MQTT client (Python scripts)
 
-* Kubernetes
-TODO
+### Run with Kubernetes
 
-* Docker
+```console
+kubernetes/<script>/build.sh
+```
+
+### Run as a Docker
 
 ```console
 docker build -t python-mqtt-rio-client:rpi3_latest ./Arduino-Raspberry_MQTT/client/ (only first time)
@@ -32,6 +38,7 @@ docker push python-mqtt-rio-client:rpi3_latest
 
 docker run --net=host --restart unless-stopped -d python-mqtt-rio-client (launch MQTT broker on 1883 first)
 ```
+or run on Kubernetes.
 
 *TODO: add external configuration file!*
 

@@ -22,9 +22,9 @@ RUN pip install paho-mqtt
 
 RUN mkdir $HOME/scripts
 
-COPY MQTT_Client.py $HOME/scripts/
+COPY MQTT_Client.py /home/root/scripts/
 
-COPY ./on_messages.py $HOME/scripts/
+COPY ./on_messages.py /home/root/scripts/
 
-CMD [ "python", "$HOME/scripts/MQTT_Client.py" ]
+CMD [ "python", "/home/root/scripts/MQTT_Client.py" ]
 

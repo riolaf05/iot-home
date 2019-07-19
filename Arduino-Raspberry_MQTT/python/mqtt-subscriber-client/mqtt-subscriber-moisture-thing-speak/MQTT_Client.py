@@ -4,7 +4,7 @@ import urllib2
 import time
 import datetime
 from time import sleep
-from on_messages import on_message_test
+from on_messages import on_message
 #import Adafruit_DHT as dht
 
 # Enter Your ThingSpeak API key here

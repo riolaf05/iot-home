@@ -13,10 +13,11 @@ const char* wifi_password = "s3wv93bx9pkwd3m5";
 // MQTT
 // Make sure to update this for your own MQTT Broker!
 // TODO: externalize parameters!!!
-const char* mqtt_server = "192.168.1.9";
+const char* mqtt_server = "192.168.1.10";
 const char* mqtt_topic = "test";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
+const char* mqtt_port = "30000"; //choose K8s MQTT port
 // The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
 const char* clientID = "Client ID";
 
@@ -25,7 +26,7 @@ const int sleepTimeS =300;
 
 // Initialise the WiFi and MQTT Client objects
 WiFiClient wifiClient;
-PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
+PubSubClient client(mqtt_server, mqtt_port, wifiClient); // 1883 is the listener port for the Broker
 
 
 void setup() {

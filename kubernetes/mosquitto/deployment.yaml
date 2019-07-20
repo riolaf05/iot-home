@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: mosquitto
-        image: pascaldevink/rpi-mosquitto
+        image: toke/mosquitto
         imagePullPolicy: Always
         resources:
           limits:

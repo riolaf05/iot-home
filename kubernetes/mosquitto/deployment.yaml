@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: mosquitto
-        image: dromer1967/arm32v7-mosquitto
+        image: pascaldevink/rpi-mosquitto
         imagePullPolicy: Always
         resources:
           limits:

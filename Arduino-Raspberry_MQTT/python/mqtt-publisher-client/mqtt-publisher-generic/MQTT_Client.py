@@ -24,7 +24,7 @@ client1.on_publish = on_publish                     #assign function to callback
 print("connectiong to broker..")
 client1.connect(broker,port)                        #establish connection
 ret= client1.publish("test","10")
-print("message published..")            		#publish
+print("message published..")            			#publish
 
 client1.on_disconnect = on_disconnect
 client1.disconnect()

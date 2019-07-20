@@ -6,11 +6,12 @@ spec:
   schedule: "* * * * *"
   jobTemplate:
     spec:
+      completions: 1
       template:
         spec:
           containers:
           - name: mqtt-publish-generic
             image: rio05docker/mqtt_publisher_generic:rpi3_test_20_07
-            resources:
+            command: ["python",  "/home/root/scripts/MQTT_Client.py"]
           restartPolicy: OnFailure
   successfulJobsHistoryLimit: 1

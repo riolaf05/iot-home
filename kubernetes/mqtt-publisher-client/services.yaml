@@ -9,5 +9,8 @@ spec:
   type: NodePort
   ports:
      - port: 1833
+       protocol: TCP
   selector:
     app: mqtt-module
+
+

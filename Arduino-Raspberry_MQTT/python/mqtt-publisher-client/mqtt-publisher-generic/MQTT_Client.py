@@ -1,6 +1,9 @@
 import paho.mqtt.client as paho
+import os
+
+
 #see: http://www.steves-internet-guide.com/publishing-messages-mqtt-client/
-broker="rpi-mosquitto"
+broker=os.environ['RPI_MOSQUITTO_SERVICE_HOST'] 
 port=1883
 
 def on_publish(client,userdata,result):             #create function for callback. The mid value is the message id and can 

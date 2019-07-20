@@ -1,27 +1,25 @@
-apiVersion: apps/v1beta1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: mqtt-publisher
+  labels:
+    "app": mqtt-publisher
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
         app: mqtt-publisher
     spec:
       containers:
-      - name: mqtt-sub
+      - name: mqtt-publisher
         image: rio05docker/mqtt_publisher_generic:rpi3_test_20_07
-        limits:
-          cpu: 1
-          memory: 1Gi
-        requests:
-          cpu: 100m
-          memory: 30Mi
-        #volumeMounts:
-        #- name: mqtt-sub
-          #mountPath: /app/
-      #volumes:
-      #- name: counter
-      #  persistentVolumeClaim:
-      #    claimName: counter
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 30Mi
+        

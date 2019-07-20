@@ -14,3 +14,5 @@ spec:
     nodePort: 30001
   selector:
     app: rpi-mosquitto
+
+

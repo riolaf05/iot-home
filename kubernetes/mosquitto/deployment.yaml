@@ -1,18 +1,18 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: mosquitto
+  name: rpi-mosquitto
   labels:
-    "app": mosquitto
+    app: rpi-mosquitto
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: mosquitto
+        app: rpi-mosquitto
     spec:
       containers:
-      - name: mosquitto
+      - name: rpi-mosquitto
         image: pascaldevink/rpi-mosquitto
         imagePullPolicy: Always
         resources:

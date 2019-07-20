@@ -13,3 +13,4 @@ spec:
             image: rio05docker/mqtt_publisher_generic:rpi3_test_20_07
             resources:
           restartPolicy: OnFailure
+  successfulJobsHistoryLimit: 1

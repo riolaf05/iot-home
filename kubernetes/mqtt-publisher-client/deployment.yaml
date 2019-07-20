@@ -1,17 +1,23 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: mqtt-sub
+  name: mqtt-publisher
 spec:
   replicas: 2
   template:
     metadata:
       labels:
-        app: mqtt-sub
+        app: mqtt-publisher
     spec:
       containers:
       - name: mqtt-sub
-        image: "rio05docker/mqtt_publisher:rpi3_test_latest"
+        image: rio05docker/mqtt_publisher_generic:rpi3_test_20_07
+        limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 30Mi
         #volumeMounts:
         #- name: mqtt-sub
           #mountPath: /app/

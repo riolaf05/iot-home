@@ -4,7 +4,7 @@ import os
 
 #see: http://www.steves-internet-guide.com/publishing-messages-mqtt-client/
 broker=os.environ['RPI_MOSQUITTO_SERVICE_HOST'] 
-port=1883
+port=os.environ['RPI_MOSQUITTO_SERVICE_PORT']
 
 def on_publish(client,userdata,result):             #create function for callback. The mid value is the message id and can 
 													#be used with the mid value returned from the publish method to check that 

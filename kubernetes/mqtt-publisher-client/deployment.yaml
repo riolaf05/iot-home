@@ -15,7 +15,6 @@ spec:
       - name: mqtt-publisher
         image: rio05docker/mqtt_publisher_generic:rpi3_test_20_07
         imagePullPolicy: Always
-        containerPort: 1883
         resources:
           limits:
             cpu: 1

@@ -45,8 +45,8 @@ client.username_pw_set("rio", "onslario89")
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 try:
-        client.connect("rpi-mosquitto", 1883)
-        client.subscribe("test", qos=1)
+        client.connect("10.44.0.5", 1883) #TODO: fix hard coded endpoint IP 
+        client.subscribe("moisture", qos=1)
         print "connecting.."
 
         client.loop_forever()

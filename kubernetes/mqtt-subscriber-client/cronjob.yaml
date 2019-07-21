@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: mqtt-subscribe-moisture-sensor
-            image: mqtt_subscriber_moisture_sensor:rpi3_test_21_07
+            image: rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_21_07
             command: ["python",  "/home/root/scripts/MQTT_Client.py"]
           restartPolicy: OnFailure
   successfulJobsHistoryLimit: 1

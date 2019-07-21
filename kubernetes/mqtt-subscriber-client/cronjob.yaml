@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: mqtt-publish-generic
+  name: mqtt-subscribe-moisture-sensor
 spec:
   schedule: "* * * * *"
   jobTemplate:
@@ -10,7 +10,7 @@ spec:
       template:
         spec:
           containers:
-          - name: mqtt-publish-generic
+          - name: mqtt-subscribe-moisture-sensor
             image: mqtt_subscriber_moisture_sensor:rpi3_test_21_07
             command: ["python",  "/home/root/scripts/MQTT_Client.py"]
           restartPolicy: OnFailure

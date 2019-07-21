@@ -3,7 +3,7 @@
  
 const char* ssid = "Vodafone-A41502247";
 const char* password =  "s3wv93bx9pkwd3m5";
-const char* mqttServer = "192.168.1.9";
+const char* mqttServer = "192.168.1.0";
 const int mqttPort = 1883;
 const char* mqttUser = "rio";
 const char* mqttPassword = "onslario89";
@@ -63,7 +63,8 @@ void setup() {
  
     }
   }
- 
+
+  Serial.print("Ready to receive messages..");
   client.subscribe("test");
  
 }

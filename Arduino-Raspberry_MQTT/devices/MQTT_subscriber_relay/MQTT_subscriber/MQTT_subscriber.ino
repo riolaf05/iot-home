@@ -65,7 +65,7 @@ void setup() {
   }
 
   Serial.print("Ready to receive messages..");
-  client.subscribe("test");
+  client.subscribe("pump_activation");
  
 }
  

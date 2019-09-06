@@ -15,6 +15,7 @@ const char* wifi_password = "s3wv93bx9pkwd3m5";
 // TODO: externalize parameters!!!
 const char* mqtt_server = "192.168.1.0";
 const char* mqtt_topic = "moisture";
+const char* mqtt_sub_topic = "pump_activation";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
 const int mqtt_port = 1883; //choose K8s MQTT port
@@ -23,34 +24,11 @@ const char* clientID = "ClientID";
 const char* ok_message = "ON";
 
 // Time to sleep (in seconds):
-const int sleepTimeS =300;
+const int sleepTimeS =60; //In seconds
 
 // Initialise the WiFi and MQTT Client objects
 WiFiClient wifiClient;
 PubSubClient client(mqtt_server, mqtt_port, wifiClient); // 1883 is the listener port for the Broker
-
-
-void callback(char* topic, byte* payload, unsigned int length) {
- 
-    Serial.print("Message arrived in topic: ");
-    Serial.println(topic);
-  
-    String message;
-   
-    Serial.print("Message:");
-    for (int i = 0; i < length; i++) {
-      message += (char)payload[i];
-    }
-  
-     if(message.equals("OK")){
-      digitalWrite(1, HIGH);
-      delay(10);
-      digitalWrite(1, LOW);
-      }
-
-  }
-
-
 
 void setup() {
   // Begin Serial on 115200
@@ -75,7 +53,6 @@ void setup() {
   Serial.println(WiFi.localIP());
 
 
-
   // Connect to MQTT Broker
   // client.connect returns a boolean value to let us know if the connection was successful.
   // If the connection is failing, make sure you are using the correct MQTT Username and Password (Setup Earlier in the Instructable)
@@ -94,11 +71,20 @@ void setup() {
   
   // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
   // TODO: CHANGE the function according to the sensor you want to use! <<< HERE
+
+  // Subscribing to topic..
+  client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
-  client.subscribe("pump_activation");
-  
+  if(client.subscribe(mqtt_sub_topic)) {
+    Serial.print("Subscribed to ");
+    Serial.print(mqtt_sub_topic);
+    Serial.println(" topic");
+  }
+  else {
+    Serial.println("Subscription failed!");
+  }
  
-  
+  // Publishing to topic..
   float output_value = moistureSensor(A0);
   char cstr[16];
   if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
@@ -115,11 +101,34 @@ void setup() {
      delay(5000);
   //END OF "ONCE-WAS-LOOP" FUNCTION //////////////////////////////////////////////////
   
-  Serial.println("Deep sleep mode for sleepTimeS * microseconds");
+  Serial.print("Entering Deep Sleep mode for : ");
+  Serial.print(sleepTimeS);
+  Serial.println(" seconds");
   ESP.deepSleep(sleepTimeS * 1000000); 
 }
 
 void loop() {
+  }
+
+void callback(char* topic, byte* payload, unsigned int length) {
+ 
+    Serial.print("Message arrived in topic: ");
+    Serial.println(topic);
+  
+    String message;
+    Serial.print("Listening Mosquitto queue..");
+    Serial.print("Message:");
+    for (int i = 0; i < length; i++) {
+      message += (char)payload[i];
+    }
+     
+     if(message.equals("OK")){
+      Serial.print("Signal received from MQTT queue!");
+      digitalWrite(1, HIGH);
+      delay(10);
+      digitalWrite(1, LOW);
+      }
+
   }
 
 float moistureSensor(char inputPin){

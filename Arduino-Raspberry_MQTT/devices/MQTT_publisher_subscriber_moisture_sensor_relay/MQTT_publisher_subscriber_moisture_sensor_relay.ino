@@ -1,3 +1,4 @@
+#THISDOES NOT WORK YET (DUE TO PROBLEM WITH MQTT SUBSCRIBE OUTSIDE OF LOOP FUNCTION!!!
 #include <Bounce2.h> // Used for "debouncing" the pushbutton
 #include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
@@ -79,6 +80,7 @@ void setup() {
     Serial.print("Subscribed to ");
     Serial.print(mqtt_sub_topic);
     Serial.println(" topic");
+    client.loop();
   }
   else {
     Serial.println("Subscription failed!");
@@ -114,22 +116,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
  
     Serial.print("Message arrived in topic: ");
     Serial.println(topic);
-  
-    String message;
-    Serial.print("Listening Mosquitto queue..");
-    Serial.print("Message:");
-    for (int i = 0; i < length; i++) {
-      message += (char)payload[i];
+    Serial.println("Signal received from MQTT queue!");
+    pinMode(13, OUTPUT);
+    digitalWrite(13, HIGH);
+    delay(10);
+    digitalWrite(13, LOW);
     }
-     
-     if(message.equals("OK")){
-      Serial.print("Signal received from MQTT queue!");
-      digitalWrite(1, HIGH);
-      delay(10);
-      digitalWrite(1, LOW);
-      }
-
-  }
 
 float moistureSensor(char inputPin){
     int sensorValue = analogRead(inputPin); //Read the analog value

@@ -7,6 +7,7 @@
 
 const int ledPin = 0; // This code uses the built-in led for visual feedback that the button has been pressed
 const int buttonPin = 13; // Connect your button to pin #13
+float t =0.0;
 
 ////////////////////////////////////////////// WiFi
 // Make sure to update this for your own WiFi network!

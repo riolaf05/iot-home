@@ -1,15 +1,19 @@
 #include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
+#include <DHT.h>        // DHT11 temperature and humidity sensor Predefined library
+
+#define DHTTYPE DHT11
+#define dht_dpin 0
 
 const int ledPin = 0; // This code uses the built-in led for visual feedback that the button has been pressed
 const int buttonPin = 13; // Connect your button to pin #13
 
-// WiFi
+////////////////////////////////////////////// WiFi
 // Make sure to update this for your own WiFi network!
 const char* ssid = "Vodafone-A41502247";
 const char* wifi_password = "s3wv93bx9pkwd3m5";
 
-// MQTT
+////////////////////////////////////////////// MQTT
 // Make sure to update this for your own MQTT Broker!
 // TODO: externalize parameters!!!
 const char* mqtt_server = "192.168.1.0";
@@ -59,6 +63,8 @@ float moistureSensor(char inputPin){
 void setup() {
  
   Serial.begin(115200);
+
+  DHT dht(dht_dpin, DHTTYPE);
  
   WiFi.begin(ssid, wifi_password);
  
@@ -92,13 +98,15 @@ void setup() {
 }
  
 void loop() {
-  //Subscribing to MQTT topic..
+  //////////////////////////////////////Subscribing to MQTT topic..
   client.loop();
 
-  //Publishing to MQTT topic..
-  float output_value = moistureSensor(A0);
+  ////////////////////////////////////Publishing to MQTT topic..
+  //////////////////////////////// Getting moisture sensor value
+  float moisture_value = moistureSensor(A0);
   char cstr[16];
-  if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
+  // Sending moisture value to MQTT broker
+  if (client.publish(mqtt_topic, itoa(moisture_value, cstr, 10))) {
     Serial.println("Message sent to MQTT topic!");
   }
   // Again, client.publish will return a boolean value depending on whether it succeded or not.
@@ -107,7 +115,24 @@ void loop() {
     Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
     client.connect(clientID, mqtt_username, mqtt_password);
     delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-    client.publish(mqtt_topic, itoa(output_value, cstr, 10));
+    client.publish(mqtt_topic, itoa(moisture_value, cstr, 10));
   }
+
+  ///////////////////////////////////////// Getting DHT values
+  t = dht.readTemperature(); //Read temperature in celcius
+  // Sending temperature value to MQTT broker
+  if (client.publish(mqtt_topic, itoa(t, cstr, 10))) {
+    Serial.println("Message sent to MQTT topic!");
+  }
+  // Again, client.publish will return a boolean value depending on whether it succeded or not.
+  // If the message failed to send, we will try again, as the connection may have broken.
+  else {
+    Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
+    client.connect(clientID, mqtt_username, mqtt_password);
+    delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
+    client.publish(mqtt_topic, itoa(t, cstr, 10));
+  }
+
+  
   delay(5000);
 }

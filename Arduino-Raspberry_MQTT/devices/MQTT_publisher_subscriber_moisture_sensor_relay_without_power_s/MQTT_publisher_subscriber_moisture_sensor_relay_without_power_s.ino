@@ -18,7 +18,7 @@ const char* wifi_password = "s3wv93bx9pkwd3m5";
 // Make sure to update this for your own MQTT Broker!
 // TODO: externalize parameters!!!
 const char* mqtt_server = "192.168.1.0";
-const char* mqtt_topic = "moisture";
+const char* mqtt_moisture_topic = "moisture";
 const char* mqtt_sub_topic = "pump_activation";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
@@ -106,7 +106,7 @@ void loop() {
   float moisture_value = moistureSensor(A0);
   char cstr[16];
   // Sending moisture value to MQTT broker
-  if (client.publish(mqtt_topic, itoa(moisture_value, cstr, 10))) {
+  if (client.publish(mqtt_moisture_topic, itoa(moisture_value, cstr, 10))) {
     Serial.println("Message sent to MQTT topic!");
   }
   // Again, client.publish will return a boolean value depending on whether it succeded or not.
@@ -115,13 +115,13 @@ void loop() {
     Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
     client.connect(clientID, mqtt_username, mqtt_password);
     delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-    client.publish(mqtt_topic, itoa(moisture_value, cstr, 10));
+    client.publish(mqtt_moisture_topic, itoa(moisture_value, cstr, 10));
   }
 
   ///////////////////////////////////////// Getting DHT values
   t = dht.readTemperature(); //Read temperature in celcius
   // Sending temperature value to MQTT broker
-  if (client.publish(mqtt_topic, itoa(t, cstr, 10))) {
+  if (client.publish(mqtt_temperature_topic, itoa(t, cstr, 10))) {
     Serial.println("Message sent to MQTT topic!");
   }
   // Again, client.publish will return a boolean value depending on whether it succeded or not.
@@ -130,7 +130,7 @@ void loop() {
     Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
     client.connect(clientID, mqtt_username, mqtt_password);
     delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-    client.publish(mqtt_topic, itoa(t, cstr, 10));
+    client.publish(mqtt_temperature_topic, itoa(t, cstr, 10));
   }
 
   

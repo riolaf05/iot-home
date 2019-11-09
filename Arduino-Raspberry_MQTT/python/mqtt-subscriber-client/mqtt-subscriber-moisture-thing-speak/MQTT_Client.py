@@ -45,7 +45,7 @@ client.username_pw_set("rio", "onslario89")
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 try:
-        client.connect("10.44.0.5", 1883) #TODO: fix hard coded endpoint IP 
+        client.connect("192.168.1.0", 1883) #TODO: fix hard coded endpoint IP 
         client.subscribe("moisture", qos=1)
         print "connecting.."
 

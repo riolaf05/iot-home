@@ -29,6 +29,7 @@ const char* ok_message = "ON";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
+DHT dht(dht_dpin, DHTTYPE);
  
 void callback(char* topic, byte* payload, unsigned int length) {
   
@@ -64,8 +65,6 @@ float moistureSensor(char inputPin){
 void setup() {
  
   Serial.begin(115200);
-
-  DHT dht(dht_dpin, DHTTYPE);
  
   WiFi.begin(ssid, wifi_password);
  

@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rpi-mosquitto
+  labels:
+    app: rpi-mosquitto
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rpi-mosquitto
+    spec:
+      containers:
+      - name: rpi-mosquitto
+        image: pascaldevink/rpi-mosquitto
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 30Mi
+        ports:
+        - containerPort: 1883
+        volumeMounts:
+        - name: mosquitto-data-volume
+          mountPath: /srv/mqtt/data
+        - name: mosquitto-log-volume
+          mountPath: /srv/mqtt/log
+      volumes:
+      - name: mosquitto-data-volume
+        persistentVolumeClaim:
+          claimName: mosquitto-pv-data-claim
+      - name: mosquitto-log-volume
+        persistentVolumeClaim:
+          claimName: mosquitto-pv-log-claim

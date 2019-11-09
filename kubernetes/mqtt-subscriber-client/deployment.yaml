@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: mqtt-sub
-        image: "python-mqtt-rio-client:rpi3_latest"
+        image: "rio05docker/mqtt_subscriber:rpi3_test_latest"
         #volumeMounts:
         #- name: mqtt-sub
           #mountPath: /app/

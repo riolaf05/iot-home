@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mqtt-module
+  name: mqtt-svc
+spec:
+  type: NodePort
+  ports:
+     - port: 1883
+       protocol: TCP
+  selector:
+    app: mqtt-module
+
+

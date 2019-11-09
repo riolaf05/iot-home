@@ -1,0 +1,48 @@
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mosquitto-data-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 50Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mosquitto/data 
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - raspberrypi
+---
+
+
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mosquitto-log-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 25Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mosquitto/log
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - raspberrypi

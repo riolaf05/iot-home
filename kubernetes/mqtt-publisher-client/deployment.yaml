@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mqtt-publisher
+  labels:
+    "app": mqtt-publisher
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mqtt-publisher
+    spec:
+      containers:
+      - name: mqtt-publisher
+        image: rio05docker/mqtt_publisher_generic:rpi3_test_20_07
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 30Mi
+        

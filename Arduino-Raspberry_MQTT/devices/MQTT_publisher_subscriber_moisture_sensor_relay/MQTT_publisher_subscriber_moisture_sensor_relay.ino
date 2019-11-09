@@ -1,3 +1,4 @@
+#THISDOES NOT WORK YET (DUE TO PROBLEM WITH MQTT SUBSCRIBE OUTSIDE OF LOOP FUNCTION!!!
 #include <Bounce2.h> // Used for "debouncing" the pushbutton
 #include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
@@ -13,20 +14,22 @@ const char* wifi_password = "s3wv93bx9pkwd3m5";
 // MQTT
 // Make sure to update this for your own MQTT Broker!
 // TODO: externalize parameters!!!
-const char* mqtt_server = "192.168.1.9";
-const char* mqtt_topic = "test";
+const char* mqtt_server = "192.168.1.0";
+const char* mqtt_topic = "moisture";
+const char* mqtt_sub_topic = "pump_activation";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
+const int mqtt_port = 1883; //choose K8s MQTT port
 // The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
-const char* clientID = "Client ID";
+const char* clientID = "ClientID";
+const char* ok_message = "ON";
 
 // Time to sleep (in seconds):
-const int sleepTimeS =300;
+const int sleepTimeS =60; //In seconds
 
 // Initialise the WiFi and MQTT Client objects
 WiFiClient wifiClient;
-PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
-
+PubSubClient client(mqtt_server, mqtt_port, wifiClient); // 1883 is the listener port for the Broker
 
 void setup() {
   // Begin Serial on 115200
@@ -50,6 +53,7 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
+
   // Connect to MQTT Broker
   // client.connect returns a boolean value to let us know if the connection was successful.
   // If the connection is failing, make sure you are using the correct MQTT Username and Password (Setup Earlier in the Instructable)
@@ -60,9 +64,29 @@ void setup() {
     Serial.println("Connection to MQTT Broker failed...");
   }
 
-  //BEGIN OF LOOP FUNCTION (PUT IT HERE DUE TO DEEP-SLEEP MODE ////////////
+  //BEGIN OF "ONCE-WAS-LOOP" FUNCTION (PUT IT HERE DUE TO DEEP-SLEEP MODE ////////////
+  // The "loop" function has been moved here because, shoarting the 
+  // "D0" pin to ground, the NodeMCU will be restarted every time
+  // the "begin" function has finished. 
+  // This allows to put the NodeMCU to sleep for a given time!
+  
   // PUBLISH to the MQTT Broker (topic = mqtt_topic, defined at the beginning)
-  // CHANGE the function according to the sensor you want to use! <<< HERE
+  // TODO: CHANGE the function according to the sensor you want to use! <<< HERE
+
+  // Subscribing to topic..
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+  if(client.subscribe(mqtt_sub_topic)) {
+    Serial.print("Subscribed to ");
+    Serial.print(mqtt_sub_topic);
+    Serial.println(" topic");
+    client.loop();
+  }
+  else {
+    Serial.println("Subscription failed!");
+  }
+ 
+  // Publishing to topic..
   float output_value = moistureSensor(A0);
   char cstr[16];
   if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
@@ -77,14 +101,27 @@ void setup() {
     client.publish(mqtt_topic, itoa(output_value, cstr, 10));
   }
      delay(5000);
-  //END OF LOOP FUNCTION //////////////////////////////////////////////////
+  //END OF "ONCE-WAS-LOOP" FUNCTION //////////////////////////////////////////////////
   
-  Serial.println("Deep sleep mode for sleepTimeS * microseconds");
+  Serial.print("Entering Deep Sleep mode for : ");
+  Serial.print(sleepTimeS);
+  Serial.println(" seconds");
   ESP.deepSleep(sleepTimeS * 1000000); 
 }
 
 void loop() {
   }
+
+void callback(char* topic, byte* payload, unsigned int length) {
+ 
+    Serial.print("Message arrived in topic: ");
+    Serial.println(topic);
+    Serial.println("Signal received from MQTT queue!");
+    pinMode(13, OUTPUT);
+    digitalWrite(13, HIGH);
+    delay(10);
+    digitalWrite(13, LOW);
+    }
 
 float moistureSensor(char inputPin){
     int sensorValue = analogRead(inputPin); //Read the analog value
@@ -97,11 +134,6 @@ float moistureSensor(char inputPin){
     return percentage_value+87;
 }
 
-int relayInput(char inputPin){
-  //TODO
-}
 
-int genericSensor(char inputPin){
-  //TODO
-}
+
 

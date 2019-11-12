@@ -4,6 +4,7 @@
 
 #define DHTTYPE DHT11
 #define dht_dpin 0
+#define PUMP D7
 
 const int ledPin = 0; // This code uses the built-in led for visual feedback that the button has been pressed
 const int buttonPin = 13; // Connect your button to pin #13
@@ -41,10 +42,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.print((char)payload[i]);
   }
 
-  pinMode(13, OUTPUT);
-  digitalWrite(13, HIGH);
+  pinMode(PUMP, OUTPUT);
+  digitalWrite(PUMP, HIGH);
   delay(10);
-  digitalWrite(13, LOW);
+  digitalWrite(PUMP, LOW);
  
   Serial.println();
   Serial.println("-----------------------");
@@ -65,7 +66,7 @@ float moistureSensor(char inputPin){
 void setup() {
  
   Serial.begin(115200);
- 
+  pinMode(PUMP, OUTPUT);       //D7 as output
   WiFi.begin(ssid, wifi_password);
  
   while (WiFi.status() != WL_CONNECTED) {

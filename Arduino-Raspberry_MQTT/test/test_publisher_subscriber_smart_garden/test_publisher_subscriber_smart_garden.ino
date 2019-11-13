@@ -10,12 +10,12 @@ const int ledPin = 0; // This code uses the built-in led for visual feedback tha
 const int buttonPin = 13; // Connect your button to pin #13
 float t =0.0;
 
-////////////////////////////////////////////// WiFi
+// WiFi
 // Make sure to update this for your own WiFi network!
 const char* ssid = "Vodafone-A41502247";
 const char* wifi_password = "s3wv93bx9pkwd3m5";
 
-////////////////////////////////////////////// MQTT
+// MQTT
 // Make sure to update this for your own MQTT Broker!
 // TODO: externalize parameters!!!
 const char* mqtt_server = "192.168.1.0";
@@ -31,24 +31,20 @@ const char* ok_message = "ON";
 WiFiClient espClient;
 PubSubClient client(espClient);
 DHT dht(dht_dpin, DHTTYPE);
+
  
 void callback(char* topic, byte* payload, unsigned int length) {
-  
-  Serial.print("Subscribing to MQTT topic, new message arrived: ");
+  Serial.print("New message arrived: ");
   Serial.println(topic);
- 
   Serial.print("Message:");
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
-
-  //TODO: define callback actions
-  //      - push msg on pump_activation queue
- 
-  Serial.println();
-  Serial.println("-----------------------");
- 
+  digitalWrite(D7, HIGH);
+  delay(5000);
+  digitalWrite(D7, LOW);
 }
+
 
 float moistureSensor(char inputPin){
     //function which calculates the moisture sensor output value
@@ -62,19 +58,18 @@ float moistureSensor(char inputPin){
     return percentage_value+87;
 }
 
+
 void setup() {
-  
   //configuring Serial, WIFI, outputs
   Serial.begin(115200);
   WiFi.begin(ssid, wifi_password);
   pinMode(PUMP, OUTPUT);       //D7 as output
- 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.println("Connecting to WiFi..");
   }
   Serial.println("Connected to the WiFi network");
- 
+  
   //Configuring MQTT client
    Serial.println("Configuring MQTT client..");
   client.setServer(mqtt_server, mqtt_port);
@@ -84,15 +79,11 @@ void setup() {
     Serial.println("Connecting to MQTT...");
  
     if (client.connect("ESP32Client", mqtt_username, mqtt_password )) {
- 
       Serial.println("connected");  
- 
     } else {
- 
       Serial.print("failed with state ");
       Serial.print(client.state());
       delay(2000);
- 
     }
   }
   

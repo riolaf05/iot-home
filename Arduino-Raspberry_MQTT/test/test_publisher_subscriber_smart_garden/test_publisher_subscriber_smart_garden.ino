@@ -20,6 +20,7 @@ const char* wifi_password = "s3wv93bx9pkwd3m5";
 // TODO: externalize parameters!!!
 const char* mqtt_server = "192.168.1.0";
 const char* mqtt_moisture_topic = "moisture";
+const char* mqtt_temperature_topic = "temperature";
 const char* mqtt_sub_topic = "pump_activation";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
@@ -93,16 +94,23 @@ void setup() {
   client.subscribe("moisture");
  
 }
+
+
+
  
 void loop() {
-  //Subscribing to MQTT topic..
+  //Subscribing to MQTT topic to check for water pump activation..
+  Serial.println("Checking pump activation..");
   client.loop();
 
+/*
+
   //Publishing to MQTT topic..
+  
   //Getting moisture sensor value
+  Serial.println("Getting moisture value..");
   float moisture_value = moistureSensor(A0);
   char cstr[16];
-
   // Sending moisture value to MQTT broker
   if (client.publish(mqtt_moisture_topic, itoa(moisture_value, cstr, 10))) {
     Serial.println("Message sent to MQTT topic!");
@@ -118,8 +126,8 @@ void loop() {
 
 
 
-
   //Getting DHT values
+  Serial.println("Getting temperature value..");
   t = dht.readTemperature(); //Read temperature in celcius
   //Sending temperature value to MQTT broker
   if (client.publish(mqtt_temperature_topic, itoa(t, cstr, 10))) {
@@ -134,6 +142,7 @@ void loop() {
     client.publish(mqtt_temperature_topic, itoa(t, cstr, 10));
   }
 
+*/
   
   delay(5000);
 }

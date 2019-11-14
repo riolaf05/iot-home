@@ -26,7 +26,7 @@ def on_message(client, userdata, msg):
                         conn = urllib2.urlopen(baseURL + '&field1=%s' % (temperature))
                         ts = time.time()
                         st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-                        print str(st) + ": temperature " + str(temperature) + "° C"
+                        print str(st) + ": temperature " + str(temperature) + " degree"
                         # Closing the connection
                         conn.close()
                 else:

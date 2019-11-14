@@ -8,7 +8,7 @@ from on_messages import on_message
 #import Adafruit_DHT as dht
 
 # Enter Your ThingSpeak API key here
-myAPI = 'JHTAY1BANPFEPCW0'
+myAPI = 'T1UX86PZUV3ZAHQI'
 # URL where we will send the data, Don't change it
 baseURL = 'https://api.thingspeak.com/update?api_key=%s' % myAPI
 

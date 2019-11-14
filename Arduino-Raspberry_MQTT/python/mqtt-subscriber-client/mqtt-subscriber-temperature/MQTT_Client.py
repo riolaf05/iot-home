@@ -18,10 +18,12 @@ def on_subscribe(client, userdata, mid, granted_qos):
 def on_message(client, userdata, msg):
         try:
                 temperature = float(msg.payload)
+                print(temperature)
                 # If Reading is valid
                 if isinstance(temperature, float):
                         # Formatting to two decimal places
-                        temperature = '%.2f' % temperature                                    
+                        temperature = '%.2f' % temperature   
+                        print(temperature)                                 
                         # Sending the data to ThingSpeak
                         conn = urllib2.urlopen(baseURL + '&field1=%s' % (temperature))
                         ts = time.time()

@@ -46,13 +46,12 @@ kubernetes/<script>/build.sh
 ### Run as a Docker
 
 ```console
-docker build -t python-mqtt-rio-client:rpi3_latest ./Arduino-Raspberry_MQTT/client/ (only first time)
+iot-home/Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/build.sh
+iot-home/Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-temperature/build.sh
 
-docker push python-mqtt-rio-client:rpi3_latest
-
-docker run --net=host --restart unless-stopped -d python-mqtt-rio-client (launch MQTT broker on 1883 first)
+docker run -d -it --rm --network host rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_<day>_<month>
+docker run -d -it --rm --network host rio05docker/mqtt_subscriber_temperature_sensor:rpi3_test_<day>_<month>
 ```
-or run on Kubernetes.
 
 *TODO: add external configuration file!*
 

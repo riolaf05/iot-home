@@ -2,9 +2,9 @@
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
 #include <DHT.h>        // DHT11 temperature and humidity sensor Predefined library
 
-#define DHTTYPE DHT11
-#define dht_dpin 0
+#define DHTTYPE DHT22
 #define PUMP D7
+#define dht_dpin D3
 
 const int ledPin = 0; // This code uses the built-in led for visual feedback that the button has been pressed
 const int buttonPin = 13; // Connect your button to pin #13
@@ -35,15 +35,17 @@ DHT dht(dht_dpin, DHTTYPE);
 
  
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("New message arrived: ");
+  Serial.println("New message arrived: ");
   Serial.println(topic);
   Serial.print("Message:");
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
   }
+  Serial.println("");
   digitalWrite(D7, HIGH);
   delay(5000);
   digitalWrite(D7, LOW);
+  
 }
 
 
@@ -58,6 +60,7 @@ float moistureSensor(char inputPin){
     Serial.println("%");
     return percentage_value+87;
 }
+
 
 
 void setup() {
@@ -90,9 +93,6 @@ void setup() {
   
   //Subscribing to MQTT queue
   client.subscribe("pump_activation");
-  client.subscribe("temperature");
-  client.subscribe("moisture");
- 
 }
 
 
@@ -124,11 +124,14 @@ void loop() {
     client.publish(mqtt_moisture_topic, itoa(moisture_value, cstr, 10));
   }
 
-
+*/
 
   //Getting DHT values
   Serial.println("Getting temperature value..");
+  char cstr[16];
   t = dht.readTemperature(); //Read temperature in celcius
+  Serial.print("temperature: ");
+  Serial.println(t);
   //Sending temperature value to MQTT broker
   if (client.publish(mqtt_temperature_topic, itoa(t, cstr, 10))) {
     Serial.println("Message sent to MQTT topic!");
@@ -142,7 +145,7 @@ void loop() {
     client.publish(mqtt_temperature_topic, itoa(t, cstr, 10));
   }
 
-*/
+
   
   delay(5000);
 }

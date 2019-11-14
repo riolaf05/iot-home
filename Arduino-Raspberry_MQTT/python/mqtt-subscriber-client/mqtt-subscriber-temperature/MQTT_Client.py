@@ -18,12 +18,10 @@ def on_subscribe(client, userdata, mid, granted_qos):
 def on_message(client, userdata, msg):
         try:
                 temperature = float(msg.payload)
-                print(temperature)
                 # If Reading is valid
                 if isinstance(temperature, float):
                         # Formatting to two decimal places
                         temperature = '%.2f' % temperature   
-                        print(temperature)                                 
                         # Sending the data to ThingSpeak
                         conn = urllib2.urlopen(baseURL + '&field1=%s' % (temperature))
                         ts = time.time()
@@ -35,8 +33,9 @@ def on_message(client, userdata, msg):
                         print 'Error'
                 # Sesnor (e.g. DHT22) requires 2 seconds to give a reading, so make sure to add delay of above 2 seconds.
                 sleep(20)
-        except:
+        except Exception as e:
                 print "connessione persa!"
+                print(e)
 
 '''
 This script is used to listen on MQTT port 1883 and trigger the "on_message_xxx" methods

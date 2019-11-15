@@ -2,12 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mqtt-module
+    app: mqtt-sub-moisture
   name: mqtt-svc
-  namespace: mqtt
 spec:
   type: NodePort
   ports:
      - port: 1833
   selector:
-    app: mqtt-module
+    app: mqtt-sub-moisture

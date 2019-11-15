@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mqtt-sub-moisture
+  labels:
+    app: mqtt-sub-moisture
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mqtt-sub-moisture
+    spec:
+      containers:
+      - name: mqtt-sub-moisture
+        image: "rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_14_11"
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 1
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 30Mi
+        

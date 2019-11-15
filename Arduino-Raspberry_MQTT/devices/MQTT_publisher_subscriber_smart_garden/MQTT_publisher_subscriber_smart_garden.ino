@@ -1,19 +1,25 @@
 #include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
+#include <DHT.h>        // DHT11 temperature and humidity sensor Predefined library
+
+#define DHTTYPE DHT11
+#define dht_dpin 0
+#define PUMP D7
 
 const int ledPin = 0; // This code uses the built-in led for visual feedback that the button has been pressed
 const int buttonPin = 13; // Connect your button to pin #13
+float t =0.0;
 
-// WiFi
+////////////////////////////////////////////// WiFi
 // Make sure to update this for your own WiFi network!
 const char* ssid = "Vodafone-A41502247";
 const char* wifi_password = "s3wv93bx9pkwd3m5";
 
-// MQTT
+////////////////////////////////////////////// MQTT
 // Make sure to update this for your own MQTT Broker!
 // TODO: externalize parameters!!!
 const char* mqtt_server = "192.168.1.0";
-const char* mqtt_topic = "moisture";
+const char* mqtt_moisture_topic = "moisture";
 const char* mqtt_sub_topic = "pump_activation";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
@@ -24,6 +30,7 @@ const char* ok_message = "ON";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
+DHT dht(dht_dpin, DHTTYPE);
  
 void callback(char* topic, byte* payload, unsigned int length) {
   
@@ -35,10 +42,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.print((char)payload[i]);
   }
 
-  pinMode(13, OUTPUT);
-  digitalWrite(13, HIGH);
+  pinMode(PUMP, OUTPUT);
+  digitalWrite(PUMP, HIGH);
   delay(10);
-  digitalWrite(13, LOW);
+  digitalWrite(PUMP, LOW);
  
   Serial.println();
   Serial.println("-----------------------");
@@ -59,7 +66,7 @@ float moistureSensor(char inputPin){
 void setup() {
  
   Serial.begin(115200);
- 
+  pinMode(PUMP, OUTPUT);       //D7 as output
   WiFi.begin(ssid, wifi_password);
  
   while (WiFi.status() != WL_CONNECTED) {
@@ -92,13 +99,15 @@ void setup() {
 }
  
 void loop() {
-  //Subscribing to MQTT topic..
+  //////////////////////////////////////Subscribing to MQTT topic..
   client.loop();
 
-  //Publishing to MQTT topic..
-  float output_value = moistureSensor(A0);
+  ////////////////////////////////////Publishing to MQTT topic..
+  //////////////////////////////// Getting moisture sensor value
+  float moisture_value = moistureSensor(A0);
   char cstr[16];
-  if (client.publish(mqtt_topic, itoa(output_value, cstr, 10))) {
+  // Sending moisture value to MQTT broker
+  if (client.publish(mqtt_moisture_topic, itoa(moisture_value, cstr, 10))) {
     Serial.println("Message sent to MQTT topic!");
   }
   // Again, client.publish will return a boolean value depending on whether it succeded or not.
@@ -107,7 +116,24 @@ void loop() {
     Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
     client.connect(clientID, mqtt_username, mqtt_password);
     delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
-    client.publish(mqtt_topic, itoa(output_value, cstr, 10));
+    client.publish(mqtt_moisture_topic, itoa(moisture_value, cstr, 10));
   }
+
+  ///////////////////////////////////////// Getting DHT values
+  t = dht.readTemperature(); //Read temperature in celcius
+  // Sending temperature value to MQTT broker
+  if (client.publish(mqtt_temperature_topic, itoa(t, cstr, 10))) {
+    Serial.println("Message sent to MQTT topic!");
+  }
+  // Again, client.publish will return a boolean value depending on whether it succeded or not.
+  // If the message failed to send, we will try again, as the connection may have broken.
+  else {
+    Serial.println("Message failed to send. Reconnecting to MQTT Broker and trying again");
+    client.connect(clientID, mqtt_username, mqtt_password);
+    delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
+    client.publish(mqtt_temperature_topic, itoa(t, cstr, 10));
+  }
+
+  
   delay(5000);
 }

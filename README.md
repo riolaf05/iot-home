@@ -49,8 +49,8 @@ kubernetes/<script>/build.sh
 iot-home/Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/build.sh
 iot-home/Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-temperature/build.sh
 
-docker run -d -it --rm --network host rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_<day>_<month>
-docker run -d -it --rm --network host rio05docker/mqtt_subscriber_temperature_sensor:rpi3_test_<day>_<month>
+docker run --restart=unless-stopped -it -d --network host rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_<day>_<month>
+docker run --restart=unless-stopped -it -d --network host rio05docker/mqtt_subscriber_temperature_sensor:rpi3_test_<day>_<month>
 ```
 
 *TODO: add external configuration file!*

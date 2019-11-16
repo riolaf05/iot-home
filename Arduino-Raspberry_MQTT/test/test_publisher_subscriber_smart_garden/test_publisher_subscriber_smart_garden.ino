@@ -103,7 +103,7 @@ void loop() {
   Serial.println("Checking pump activation..");
   client.loop();
 
-/*
+
 
   //Publishing to MQTT topic..
   
@@ -124,7 +124,7 @@ void loop() {
     client.publish(mqtt_moisture_topic, itoa(moisture_value, cstr, 10));
   }
 
-*/
+
 
   //Getting DHT values
   Serial.println("Getting temperature value..");

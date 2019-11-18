@@ -24,8 +24,8 @@ jobs:
       - name: Define variables
         run: echo "Tags are > ${DOCKER_TAG}"
         env:
-          DAY: date -d "$D" '+%d'
-          MONTH: date -d "$D" '+%m'
+          DAY: $(date -d "$D" '+%d')
+          MONTH: $(date -d "$D" '+%m')
           DOCKER_TAG: "rpi3_test_${DAY}_${MONTH}"
       
       -

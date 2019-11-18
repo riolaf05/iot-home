@@ -4,6 +4,9 @@ on:
   push:
     branches:    
       - develop         # Trigger when push events on develop branch
+  pull_request:
+   branches:
+      - develop
         
 jobs:
   buildx:

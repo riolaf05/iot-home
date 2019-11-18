@@ -1,10 +1,7 @@
-name: CI
+name: iot-home-ci
 
 on:
-  push:
-    branches:    
-      - dev         # Trigger when push events on develop branch
-  pull_request:
+  pull_request: # Trigger when pull request is open on develop branch
    branches:
       - dev
         

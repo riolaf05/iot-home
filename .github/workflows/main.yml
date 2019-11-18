@@ -38,7 +38,7 @@ jobs:
             --tag rio05docker/mqtt_subscriber_moisture_sensor:${DOCKER_TAG}
             --platform linux/amd64 \
             --output "type=image,push=true" \
-            --file ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/Dockerfile 
+            --file ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/Dockerfile ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/   
       - 
         name: Publish to Docker Repository
         uses: opspresso/action-docker@v0.2.1

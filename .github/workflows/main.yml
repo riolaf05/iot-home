@@ -20,13 +20,6 @@ jobs:
         uses: crazy-max/ghaction-docker-buildx@v1.0.4
         with:
           version: latest
-        
-      - name: Define variables
-        run: echo Tags are > ${DOCKER_TAG}
-        env:
-          DAY: ${{ date -d "$D" '+%d'}}
-          MONTH: ${{ date -d "$D" '+%m'}}
-          DOCKER_TAG: rpi3_test_${DAY}_${MONTH}
       
       -
         name: Available platforms
@@ -35,7 +28,7 @@ jobs:
         name: Run Buildx #see: https://github.com/marketplace/actions/docker-buildx
         run: |
           docker buildx build \
-            --tag rio05docker/mqtt_subscriber_moisture_sensor:${DOCKER_TAG} \
+            --tag rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_${{GITHUB_SHA}} \
             --platform linux/amd64 \
             --output "type=image,push=true" \
             --file ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/Dockerfile \

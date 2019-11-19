@@ -24,6 +24,14 @@ jobs:
       -
         name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
+        
+      - 
+        name: Login to GitHub Docker Registry
+        run: docker login hub.docker.com/u/rio05docker --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        
       -
         name: Run Buildx #see: https://github.com/marketplace/actions/docker-buildx
         run: |
@@ -33,10 +41,4 @@ jobs:
             --output "type=image,push=true" \
             --file ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/Dockerfile \
             ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture
-      - 
-        name: Publish to Docker Repository
-        uses: opspresso/action-docker@v0.2.1
-        with:
-          name: rio05docker/mqtt_subscriber_moisture_sensor:${DOCKER_TAG}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+   

@@ -28,7 +28,7 @@ jobs:
         name: Run Buildx #see: https://github.com/marketplace/actions/docker-buildx
         run: |
           docker buildx build \
-            --tag rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_${{GITHUB_SHA}} \
+            --tag rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_${GITHUB_SHA} \
             --platform linux/amd64 \
             --output "type=image,push=true" \
             --file ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/Dockerfile \

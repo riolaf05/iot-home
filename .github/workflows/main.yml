@@ -1,46 +1,94 @@
-name: CI
+name: iot-home-ci
 
 on:
-  push:
-    branches:    
-      - develop         # Trigger when push events on develop branch
+  push: # Trigger when push on develop branch
+   branches:
+      - dev
         
 jobs:
   buildx:
+    name: Build and push
     runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
-        uses: actions/checkout@develop
+        uses: actions/checkout@v1
+        with:
+          ref: dev
       -
         name: Set up Docker Buildx
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v1.0.4
         with:
           version: latest
-        
-      - name: Define variables
-        run: echo "Tags are > ${DOCKER_TAG}"
-        env:
-          DAY: date -d "$D" '+%d'
-          MONTH: date -d "$D" '+%m'
-          DOCKER_TAG: "rpi3_test_${DAY}_${MONTH}"
       
       -
         name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
+        
+      - 
+        name: Login to GitHub Docker Registry
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        
       -
-        name: Run Buildx #see: https://github.com/marketplace/actions/docker-buildx
+        name: Build and push moisture client container #see: https://github.com/marketplace/actions/docker-buildx
         run: |
-          docker buildx build 
-            --tag rio05docker/mqtt_subscriber_moisture_sensor:${DOCKER_TAG}
+          docker buildx build \
+            --tag rio05docker/mqtt_subscriber_moisture_sensor:rpi3_test_${GITHUB_SHA} \
             --platform linux/amd64 \
             --output "type=image,push=true" \
-            --file ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/Dockerfile 
-      - 
-        name: Publish to Docker Repository
-        uses: opspresso/action-docker@v0.2.1
-        with:
-          name: rio05docker/mqtt_subscriber_moisture_sensor:${DOCKER_TAG}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+            --file ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/Dockerfile \
+            ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture
+      
+      -
+        name: Build and push temperature client container #see: https://github.com/marketplace/actions/docker-buildx
+        run: |
+          docker buildx build \
+            --tag rio05docker/mqtt_subscriber_temperature_sensor:rpi3_test_${GITHUB_SHA} \
+            --platform linux/amd64 \
+            --output "type=image,push=true" \
+            --file ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-temperature/Dockerfile \
+            ./Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-temperature
+
+ #get k8s cluster context with:
+ #cat $HOME/.kube/config >> kube.config 
+ #..change IP addr and expose port 6443
+ #kube.config | base64 and copy the result to secrets.KUBE_CONFIG_DATA
+  
+  #deploy: #see: https://github.com/marketplace/actions/kubernetes-cli-kubectl
+  #  name: Deploy moisture client to cluster
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@master
+  #    - name: deploy to cluster
+  #      uses: steebchen/kubectl@master
+  #      env:
+  #        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  #      with:
+  #        args: set image --record deployment/mqtt-sub-moisture mqtt-sub-moisture=rio05docker/mqtt-sub-moisture:rpi3_test_${{ github.sha }}
+  #    
+  
+  
+  #    - name: deploy temperature client to cluster
+  #      uses: steebchen/kubectl@master
+  #      env:
+  #        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  #      with:
+  #        args: set image --record deployment/mqtt-sub-temp mqtt-sub-temp=rio05docker/mqtt-sub-temperature:rpi3_test_${{ github.sha }}
+   
+   
+   
+  #    - name: verify moisture client deployment
+  #      uses: steebchen/kubectl@master
+  #      env:
+  #        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  #      with:
+  #        args: '"rollout status deployment/mqtt-sub-moisture"'
+  
+  
+  #    - name: verify temperature client deployment
+  #      uses: steebchen/kubectl@master
+  #      env:
+  #        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  #      with:
+  #        args: '"rollout status deployment/mqtt-sub-temperature"'

@@ -18,6 +18,8 @@ docker exec -it mysql mysql -uroot -p
 
 create database SmartGarden;
 
+use SmartGarden;
+
 CREATE TABLE Smart_Garden_Status
 (
 ID int NOT NULL AUTO_INCREMENT,

@@ -56,7 +56,7 @@ jobs:
  #kube.config | base64 and copy the result to secrets.KUBE_CONFIG_DATA
   
   #deploy: #see: https://github.com/marketplace/actions/kubernetes-cli-kubectl
-  #  name: Deploy to cluster
+  #  name: Deploy moisture client to cluster
   #  runs-on: ubuntu-latest
   #  steps:
   #    - uses: actions/checkout@master
@@ -65,10 +65,30 @@ jobs:
   #      env:
   #        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   #      with:
-  #        args: set image --record deployment/web-server-panel web-server-panel=rio05docker/web_server_panel:rpi3_test_${{ github.sha }}
-  #    - name: verify deployment
+  #        args: set image --record deployment/mqtt-sub-moisture mqtt-sub-moisture=rio05docker/mqtt-sub-moisture:rpi3_test_${{ github.sha }}
+  #    
+  
+  
+  #    - name: deploy temperature client to cluster
   #      uses: steebchen/kubectl@master
   #      env:
   #        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
   #      with:
-  #        args: '"rollout status deployment/web-server-panel"'
+  #        args: set image --record deployment/mqtt-sub-temp mqtt-sub-temp=rio05docker/mqtt-sub-temperature:rpi3_test_${{ github.sha }}
+   
+   
+   
+  #    - name: verify moisture client deployment
+  #      uses: steebchen/kubectl@master
+  #      env:
+  #        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  #      with:
+  #        args: '"rollout status deployment/mqtt-sub-moisture"'
+  
+  
+  #    - name: verify temperature client deployment
+  #      uses: steebchen/kubectl@master
+  #      env:
+  #        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+  #      with:
+  #        args: '"rollout status deployment/mqtt-sub-temperature"'

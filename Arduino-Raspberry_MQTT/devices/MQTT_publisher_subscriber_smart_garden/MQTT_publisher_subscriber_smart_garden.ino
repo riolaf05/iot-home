@@ -22,6 +22,7 @@ const char* mqtt_server = "192.168.1.0";
 const char* mqtt_moisture_topic = "moisture";
 const char* mqtt_temperature_topic = "temperature";
 const char* mqtt_sub_topic = "pump_activation";
+const char* status_topic = "smart_garden_status";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
 const int mqtt_port = 1883; //choose K8s MQTT port
@@ -52,13 +53,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
 float moistureSensor(char inputPin){
     //function which calculates the moisture sensor output value
     int sensorValue = analogRead(inputPin); //Read the analog value
-    Serial.print("Analog value : ");
-    Serial.println(sensorValue); //Print the value on serial monitor
+    //Serial.print("Analog value : ");
+    //Serial.println(sensorValue); //Print the value on serial monitor
     int percentage_value = map(sensorValue,550,10,0,100);
-    Serial.print("Mositure : ");
+    Serial.print("- Moisture : ");
     Serial.print(percentage_value + 87);
     Serial.println("%");
-    return percentage_value+87;
+    return percentage_value + 87;
 }
 
 
@@ -100,20 +101,26 @@ void setup() {
  
 void loop() {
   //Subscribing to MQTT topic to check for water pump activation..
-  Serial.println("Checking pump activation..");
+  Serial.println("- Checking pump activation..");
   client.loop();
 
 
 
   //Publishing to MQTT topic..
-  
+
+  //Smart garden status
+  if (client.publish(status_topic, "ON")) {
+    Serial.println("Message sent to MQTT status topic!");
+  }
+
+  //Moisture
   //Getting moisture sensor value
   Serial.println("Getting moisture value..");
   float moisture_value = moistureSensor(A0);
   char cstr[16];
   // Sending moisture value to MQTT broker
   if (client.publish(mqtt_moisture_topic, itoa(moisture_value, cstr, 10))) {
-    Serial.println("Message sent to MQTT topic!");
+    Serial.println("Message sent to MQTT moisture topic!");
   }
   // Again, client.publish will return a boolean value depending on whether it succeded or not.
   // If the message failed to send, we will try again, as the connection may have broken.
@@ -125,16 +132,15 @@ void loop() {
   }
 
 
-
+  //Temperature
   //Getting DHT values
   Serial.println("Getting temperature value..");
-  char cstr[16];
   t = dht.readTemperature(); //Read temperature in celcius
-  Serial.print("temperature: ");
+  Serial.print("- Temperature: ");
   Serial.println(t);
   //Sending temperature value to MQTT broker
   if (client.publish(mqtt_temperature_topic, itoa(t, cstr, 10))) {
-    Serial.println("Message sent to MQTT topic!");
+    Serial.println("Message sent to MQTT temperature topic!");
   }
   // Again, client.publish will return a boolean value depending on whether it succeded or not.
   // If the message failed to send, we will try again, as the connection may have broken.

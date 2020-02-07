@@ -11,9 +11,13 @@ it containts scripts from my home iot platform
 
 ### Run with Kubernetes
 
+Clone this repo on a Raspberry Pi with Kubernetes installed and run:
+
 ```console
-kubernetes/mosquitto/build.sh
+install.sh <github_sha>
 ```
+
+Where `<github_sha>` is the latest GitHub sha code used on the last GitHub Actions continuous delivery pipeline and can be found on Docker Hub.
 
 ### Run as a Docker
 
@@ -39,9 +43,7 @@ TODO: change hard-coded broker IP address
 
 ### Run with Kubernetes
 
-```console
-kubernetes/<script>/build.sh
-```
+See MQTT Broker Kubernetes installation.
 
 ### Run as a Docker
 

@@ -1,13 +1,13 @@
 # IoT-home
-it containts scripts from my home iot platform
+Resources for IoT edge gateway, provided with CI/CD pipeline. 
 
 ## Installation 
 
-* Add /mosquitto/data and /mosquitto/log folders 
+1. Add /mosquitto/data and /mosquitto/log folders 
 
-* Install Mosquitto Broker and IoT clients to communicate with Arduino devices
+2. Install Mosquitto MQTT broker and IoT clients to communicate with Arduino devices
 
-## MQTT broker
+## MQTT broker installation
 
 ### Run with Kubernetes
 
@@ -19,7 +19,7 @@ install.sh <github_sha>
 
 Where `<github_sha>` is the latest GitHub sha code used on the last GitHub Actions continuous delivery pipeline and can be found on Docker Hub.
 
-### Run as a Docker
+### Run as Docker container
 
 ```console
 docker run eclipse-mosquitto
@@ -39,13 +39,13 @@ kubectl get svc | grep rpi-mosquitto
 
 TODO: change hard-coded broker IP address
 
-## Deploy MQTT client (Python scripts)
+## Deploy MQTT subscribers (python scripts)
 
 ### Run with Kubernetes
 
 See MQTT Broker Kubernetes installation.
 
-### Run as a Docker
+### Run as Docker container
 
 ```console
 iot-home/Arduino-Raspberry_MQTT/python/mqtt-subscriber-client/mqtt-subscriber-moisture/build.sh
@@ -55,5 +55,7 @@ docker run --restart=unless-stopped -it -d --network host rio05docker/mqtt_subsc
 docker run --restart=unless-stopped -it -d --network host rio05docker/mqtt_subscriber_temperature_sensor:rpi3_test_<day>_<month>
 ```
 
-*TODO: add external configuration file!*
+### Agenda: 
+
+1. add external configuration file!
 

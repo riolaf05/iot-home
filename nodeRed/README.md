@@ -1,15 +1,20 @@
 
 # Node Red installation and configuration
 
-## Smart garden status led
+## Features:
 
-### Installation with Kubernetes
+* Smart garden status led: allows to read from 
+`smart_garden_status` topic (which is updated by MQTT device, e.g. ESP8266) and store informations about device status (on, off). 
 
-TBD
+## Installation
 
-### Installation with Docker
+### Install and configure MySQL
 
-* Install MySQL DB:
+* With Kubernetes:
+
+Install MySQL pod from [pannello_controllo](https://github.com/riolaf05/pannello-server) repo.
+
+* With docker:
 
 ```console
 docker run --name=mysql --network=host -e MYSQL_ROOT_PASSWORD=<password> -d hypriot/rpi-mysql (if not already present)
@@ -31,7 +36,7 @@ PRIMARY KEY (ID)
 
 ```
 
-* Configure Node Red docker:
+### Configure Node Red docker:
 
 ```console
 
@@ -41,7 +46,7 @@ docker run -d -it --restart=unless-stopped -p 1880:1880 -v /home/pi/volume/noder
 
 ```
 
-* Cofigure Node Red:
+### Cofigure Node Red:
 
 Open <node_ip>:1883, then go to:
 
@@ -49,4 +54,4 @@ Settings -> Palette -> Install tab -> node-red-node-mysql --> Install
 
 Import flow.json from the UI tool.
 
-* Publish on smart_garden_status topic from the device
+

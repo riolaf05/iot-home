@@ -35,7 +35,7 @@ def camera():
                             devices=devices,
                             ports=ports,
                             privileged=True,
-                            detach=True
+                            #detach=True
                             #environment=env,
         ) 
 

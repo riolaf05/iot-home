@@ -30,8 +30,8 @@ def camera():
         container = client.containers.run(
                             image="rio05docker/obj_detection_cd:rpi3_rt_tflite_tpu",
                             name='ai-camera',
-                            entrypoint=['/bin/sh', '-c', '/home/scripts/object_detections/download.sh'],
-                            command=['python3', 'demo_real_time_obj_detection_server.py', '--model', '/tmp/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite', '--label', '/tmp/coco_labels.txt'],
+                            entrypoint=['/bin/sh', '-c', '/home/scripts/object_detections/download.sh', '&&', 'python3', 'demo_real_time_obj_detection_server.py', '--model', '/tmp/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite', '--label', '/tmp/coco_labels.txt'],
+                            #command=[],
                             volumes=volume_bindings,
                             devices=devices,
                             ports=ports,

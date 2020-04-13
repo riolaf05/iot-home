@@ -10,41 +10,32 @@ import docker
 
 app = Flask(__name__)
 
-#client = docker.APIClient(base_url='unix://var/run/docker.sock')
 client = docker.from_env()
 
 @app.route('/camera', methods = ['GET', 'POST', 'DELETE'])
 def camera():
     if request.method == 'GET':
 
-        #volumes= ['/dev/bus/usb']
         volume_bindings = {
                             '/dev/bus/usb': {
                                 'bind': '/dev/bus/usb',
                                 'mode': 'rw',
                             },
         }
-        '''
-        host_config = client.create_host_config(
-                            binds=volume_bindings,
-                            privileged=True
-        )
-        '''
         
         devices=['/dev/vchiq:rwm']
 
         container = client.containers.run(
                             image="rio05docker/obj_detection_cd:rpi3_rt_tflite_tpu",
                             name='ai-camera',
-                            command='python3 demo_real_time_obj_detection_server.py --model /tmp/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite --label /tmp/coco_labels.txt'
+                            command='python3 demo_real_time_obj_detection_server.py --model /tmp/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite --label /tmp/coco_labels.txt',
                             volumes=volume_bindings,
-                            #host_config=host_config,
+                            devices=devices,
                             privileged=True,
                             detach=True
                             #environment=env,
         ) 
 
-        #response = client.start(container=container.get('Id'), devices=devices, detach=True)
         return Response(response=container.logs(), status=200)
 
 

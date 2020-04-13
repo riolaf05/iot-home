@@ -33,7 +33,7 @@ def camera():
         
         devices=['/dev/vchiq:rwm']
 
-        response = container = client.containers.run(
+        container = client.containers.run(
                             image="rio05docker/obj_detection_cd:rpi3_rt_tflite_tpu",
                             name='ai-camera',
                             volumes=volume_bindings,
@@ -44,7 +44,7 @@ def camera():
         ) 
 
         #response = client.start(container=container.get('Id'), devices=devices, detach=True)
-        return Response(response=response, status=200)
+        return Response(response=container.logs(), status=200)
 
 
 @app.route('/camera_stop', methods = ['GET', 'POST', 'DELETE'])

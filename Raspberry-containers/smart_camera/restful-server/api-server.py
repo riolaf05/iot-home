@@ -40,6 +40,16 @@ def camera():
 
         response = client.start(container=container.get('Id'), devices=devices)
         return Response(response=response, status=200)
+
+
+@app.route('/camera_stop', methods = ['GET', 'POST', 'DELETE'])
+def camera_stop():
+    if request.method == 'GET':
+
+        container = client.containers.run('ai-camera')
+
+        return Response(response='stopped', status=200)
+
 '''    
 
 @app.route('/motion_sensor', methods = ['GET', 'POST', 'DELETE'])

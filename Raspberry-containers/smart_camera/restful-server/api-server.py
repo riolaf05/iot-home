@@ -16,7 +16,7 @@ client = docker.APIClient(base_url='unix://var/run/docker.sock')
 def camera():
     if request.method == 'GET':
 
-        volumes= ['/dev/bus/usb']
+        #volumes= ['/dev/bus/usb']
         volume_bindings = {
                             '/dev/bus/usb': {
                                 'bind': '/dev/bus/usb',
@@ -30,15 +30,17 @@ def camera():
         
         devices=['/dev/vchiq:rwm']
 
-        container = client.create_container(
+        response = container = client.containers.run(
                             image="rio05docker/obj_detection_cd:rpi3_rt_tflite_tpu",
                             name='ai-camera',
-                            volumes=volumes,
-                            host_config=host_config,
+                            volumes=volume_bindings,
+                            #host_config=host_config,
+                            privileged=True,
+                            detach=True
                             #environment=env,
         ) 
 
-        response = client.start(container=container.get('Id'), devices=devices)
+        #response = client.start(container=container.get('Id'), devices=devices, detach=True)
         return Response(response=response, status=200)
 
 

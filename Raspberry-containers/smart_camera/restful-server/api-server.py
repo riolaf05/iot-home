@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(1, '/usr/lib/python3/dist-packages')
+sys.path.insert(1, '/usr/lib/python3/dist-packages', '/home/pi/.local/lib/python3.7/site-packages')
 
 from flask import Flask, Response, request
 import subprocess

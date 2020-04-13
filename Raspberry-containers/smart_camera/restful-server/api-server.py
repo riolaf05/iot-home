@@ -10,7 +10,8 @@ import docker
 
 app = Flask(__name__)
 
-client = docker.APIClient(base_url='unix://var/run/docker.sock')
+#client = docker.APIClient(base_url='unix://var/run/docker.sock')
+client = docker.from_env()
 
 @app.route('/camera', methods = ['GET', 'POST', 'DELETE'])
 def camera():

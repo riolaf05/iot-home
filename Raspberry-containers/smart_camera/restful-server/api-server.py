@@ -3,6 +3,10 @@ import subprocess
 import os
 import docker
 
+import sys
+sys.path.insert(1, '/usr/lib/python3/dist-packages')
+
+
 app = Flask(__name__)
 
 client = docker.APIClient(base_url='unix://var/run/docker.sock')

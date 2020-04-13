@@ -24,10 +24,12 @@ def camera():
                                 'mode': 'rw',
                             },
         }
+        '''
         host_config = client.create_host_config(
                             binds=volume_bindings,
                             privileged=True
         )
+        '''
         
         devices=['/dev/vchiq:rwm']
 

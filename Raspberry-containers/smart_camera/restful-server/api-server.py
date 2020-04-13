@@ -43,7 +43,7 @@ def camera():
             stdout=True
         )
 
-        return Response(response=container.logs(), status=200)
+        return Response(response='ok', status=200)
 
 
 @app.route('/camera_stop', methods = ['GET', 'POST', 'DELETE'])

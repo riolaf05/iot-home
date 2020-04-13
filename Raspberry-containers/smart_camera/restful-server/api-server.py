@@ -1,10 +1,10 @@
+import sys
+sys.path.insert(1, '/usr/lib/python3/dist-packages')
+
 from flask import Flask, Response, request
 import subprocess
 import os
 import docker
-
-import sys
-sys.path.insert(1, '/usr/lib/python3/dist-packages')
 
 
 app = Flask(__name__)

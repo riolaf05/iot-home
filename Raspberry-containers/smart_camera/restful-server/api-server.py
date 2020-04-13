@@ -39,7 +39,8 @@ def camera():
         ) 
 
         container.exec_run(                            
-            cmd=['python3', 'demo_real_time_obj_detection_server.py', '--model', '/tmp/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite', '--label', '/tmp/coco_labels.txt']
+            cmd=['python3', 'demo_real_time_obj_detection_server.py', '--model', '/tmp/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite', '--label', '/tmp/coco_labels.txt'],
+            stdout=True
         )
 
         return Response(response=container.logs(), status=200)

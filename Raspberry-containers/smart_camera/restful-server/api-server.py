@@ -30,6 +30,7 @@ def camera():
         container = client.containers.run(
                             image="rio05docker/obj_detection_cd:rpi3_rt_tflite_tpu",
                             name='ai-camera',
+                            entrypoint=['/bin/sh', '-c', '/home/scripts/object_detections/download.sh'],
                             volumes=volume_bindings,
                             devices=devices,
                             ports=ports,
@@ -43,7 +44,7 @@ def camera():
             stdout=True
         )
 
-        return Response(response='ok', status=200)
+        return Response(response=container.logs(), status=200)
 
 
 @app.route('/camera_stop', methods = ['GET', 'POST', 'DELETE'])

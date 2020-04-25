@@ -7,7 +7,7 @@ p = GPIO.PWM(17, 50)
 p.start(7.5)
 
 def get_pwm(angle):
-    return (angle/18.0) + 2.5
+	return (angle/18.0) + 2.5
 
 def move_servo(angle):
 	try:

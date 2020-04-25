@@ -10,4 +10,4 @@ def on_message(client, userdata, msg):
                         print('Error')
                 sleep(20)
         except:
-                print "connessione persa!"
+                print("connessione persa!")

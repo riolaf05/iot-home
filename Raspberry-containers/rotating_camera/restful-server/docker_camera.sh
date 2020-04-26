@@ -1,0 +1,1 @@
+docker run -it --rm --name=ai_news -e TELEGRAM_BOT_TOKEN='${TELEGRAM_BOT_TOKEN}' -e TELEGRAM_CHAT_ID='${TELEGRAM_CHAT_ID}' rio05docker/ai_news_server:rpi3_develop_89714b6a3deaedd9672f73525ccc435cac5cd9ee

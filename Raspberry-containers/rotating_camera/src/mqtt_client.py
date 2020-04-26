@@ -1,3 +1,4 @@
+import os
 import paho.mqtt.client as paho
 import sys
 import time
@@ -31,7 +32,7 @@ client.on_message = on_message
 try:
         print("connecting..")
         client.connect("192.168.1.11", 1883) 
-        client.subscribe("camera", qos=1)
+        client.subscribe(os.getenv("TOPIC"), qos=1)
         client.loop_forever()
         
 except Exception as e:

@@ -54,14 +54,14 @@ jobs:
       
       #Build&Push - raspberry containers
       -
-        name: Build and push Raspberry generic containers #see: https://github.com/marketplace/actions/docker-buildx
+        name: Build and push Raspberry rotating camera container #see: https://github.com/marketplace/actions/docker-buildx
         run: |
           docker buildx build \
-            --tag rio05docker/raspberry_container_generic:rpi3_test_${GITHUB_SHA} \
+            --tag rio05docker/raspberry_container_generic:camera \
             --platform linux/arm/v7 \
             --output "type=image,push=true" \
-            --file ./Raspberry-containers/Dockerfile \
-            ./Raspberry-containers
+            --file ./Raspberry-containers/rotating_camera/src/Dockerfile \
+            ./Raspberry-containers/rotating_camera/src/
             
             
             

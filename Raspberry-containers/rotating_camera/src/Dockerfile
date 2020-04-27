@@ -10,7 +10,7 @@ RUN apt-get install -y libatlas-base-dev gfortran
 RUN apt-get install -y python3-dev 
 RUN apt-get install -y python3-pip
 
-RUN pip3 install picamera
+#RUN pip3 install picamera
 
 RUN apt-get install rpi.gpio
 RUN pip3 install paho-mqtt

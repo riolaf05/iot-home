@@ -11,5 +11,5 @@
 3. Run: 
 
 ```console
-docker run -it --rm -d --privileged -p 1883:1883 -e TOPIC=camera --device /dev/gpiomem rio05docker/raspberry_container_generic:camera
+docker run -it --rm -d --privileged -p 1883:1883 --env TOPIC=camera --device /dev/gpiomem rio05docker/raspberry_container_generic:camera python3 /scripts/mqtt_client.py
 ```

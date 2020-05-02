@@ -1,7 +1,7 @@
 FROM arm32v7/python:3.7.7-alpine3.10
 
 RUN apt-get update && apt-get install -y rpi.gpio
-RUN pip install paho-mqtt
+RUN pip3 install paho-mqtt
 
 #COPY smart_camera.py /home/scripts/object_detections/smart_camera.py
 COPY servo_driver.py /home/scripts/object_detections/servo_driver.py

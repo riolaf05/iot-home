@@ -1,4 +1,4 @@
-FROM arm32v7/python:2.7.13-jessie
+FROM arm32v7/python:3.7.7-alpine3.10
 
 RUN apt-get update && apt-get install -y rpi.gpio
 RUN pip install paho-mqtt

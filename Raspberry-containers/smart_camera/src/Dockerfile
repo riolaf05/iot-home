@@ -16,10 +16,12 @@ RUN pip3 install opencv-python
 RUN apt-get install -y rpi.gpio
 RUN pip3 install paho-mqtt
 
-#COPY smart_camera.py /home/scripts/object_detections/smart_camera.py
-COPY servo_driver.py /home/scripts/object_detections/servo_driver.py
-COPY mqtt_client.py /home/scripts/object_detections/mqtt_client.py
-COPY on_messages.py /home/scripts/object_detections/on_messages.py
+#COPY smart_camera.py /scripts/smart_camera.py
+COPY servo_driver.py /scripts/servo_driver.py
+COPY mqtt_client.py /scripts/mqtt_client.py
+COPY on_messages.py /scripts/on_messages.py
+
+WORKDIR /scripts
 
 #CMD ["python3", "smart_camera.py", "--model", "/tmp/mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite", "--label", "/tmp/coco_labels.txt"]
 CMD ["/scripts/python", "mqtt_client.py"]

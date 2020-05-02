@@ -1,6 +1,6 @@
 FROM arm32v7/python:2.7.13-jessie
 
-RUN apt-get install rpi.gpio
+RUN apt-get update && apt-get install -y rpi.gpio
 RUN pip install paho-mqtt
 
 #COPY smart_camera.py /home/scripts/object_detections/smart_camera.py

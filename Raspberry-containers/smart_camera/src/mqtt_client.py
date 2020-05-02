@@ -8,7 +8,7 @@ from servo_driver import get_pwm, move_servo
 
 
 def on_subscribe(client, userdata, mid, granted_qos):
-    print("Subscribed: "+str(mid)+" "+str(granted_qos))
+    print "Subscribed: "+str(mid)+" "+str(granted_qos)
 
 def on_message(client, userdata, msg):
         try:
@@ -16,8 +16,8 @@ def on_message(client, userdata, msg):
                 move_servo(payload)
                 
         except Exception as e:
-                print("connessione persa!")
-                print(e)
+                print "connessione persa!"
+                print e
 
 '''
 This script is used to listen on MQTT port 1883 and trigger the "on_message_xxx" methods
@@ -30,10 +30,10 @@ client.username_pw_set("rio", "onslario89")
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 try:
-        print("connecting..")
+        print "connecting.."
         client.connect("192.168.1.0", 1883) 
         client.subscribe("camera", qos=1)
         client.loop_forever()
         
 except Exception as e:
-        print(e)
+        print e

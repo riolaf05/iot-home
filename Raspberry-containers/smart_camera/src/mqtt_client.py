@@ -24,13 +24,14 @@ This script is used to listen on MQTT port 1883 and trigger the "on_message_xxx"
 which actually publishes on ThingSpeak or other front end objects.  
 '''
 
-client = paho.Client("Python1",False)
-#client.username_pw_set("rio", "onslario89")
+#client = paho.Client("Python1",False)
+client = paho.Client()
+client.username_pw_set("rio", "onslario89")
 client.on_subscribe = on_subscribe
 client.on_message = on_message
 try:
         print("connecting..")
-        client.connect("192.168.1.11", 1883) 
+        client.connect("192.168.1.0", 1883) 
         client.subscribe("camera", qos=1)
         client.loop_forever()
         

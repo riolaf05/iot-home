@@ -130,27 +130,29 @@ void setup() {
 }
 
 void loop() {
+  //1. 
   Serial.println("Checking pump activation..");
   client.loop();
   delay(5000);
 
-  //Analog readings..
+  //2. Analog readings..
   //sensor 1
   int value_1 = mutiplexerReading(LOW, LOW, LOW);
-
   //sensor 2
   int value_2 = mutiplexerReading(LOW, HIGH, LOW);
-
   //sensor 3
   int value_3 = mutiplexerReading(LOW, HIGH, HIGH);
-
   //sensor 4
   int value_3 = mutiplexerReading(HIGH, LOW, LOW);
-
   //sensor 5
   int value_3 = mutiplexerReading(HIGH, LOW, HIGH);
 
-  //Send values through MQTT..
+  //3. Send values through MQTT..
+  if (client.publish(mqtt_analog_topic, value_1)) { //TODO: fix this to sendmultiple values at once
+  }
+  else {
+    Serial.println("Message failed to send.); 
   
-  
+}
+
 }

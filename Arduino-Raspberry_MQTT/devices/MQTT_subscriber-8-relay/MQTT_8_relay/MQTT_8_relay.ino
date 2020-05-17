@@ -30,10 +30,16 @@ const int mqtt_port = 1883; //choose K8s MQTT port
 const char* clientID = "ClientID";
 const char* ok_message = "ON";
 
-int RelayControl1 = 4; // Digital Arduino Pin used to control the motor
-int RelayControl2 = 5;
-int RelayControl3 = 6;
-int RelayControl4 = 7;
+//relay water pump control
+int RelayControl1 = 14; // Digital Arduino Pin used to control the motor
+int RelayControl2 = 12;
+int RelayControl3 = 13;
+int RelayControl4 = 15;
+
+//multiplexer control
+int MultiplexerControl4 = 2;
+int MultiplexerControl3 = 0;
+int MultiplexerControl2 = 4;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -72,6 +78,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
     delay(1000);
     break;
 }
+}
+
+int mutiplexerReading(A, B, C) {
+  digitalWrite(MultiplexerControl4, A);
+  digitalWrite(MultiplexerControl3, B);
+  digitalWrite(MultiplexerControl2, C);
+  int value = analogRead(A0);
+
+  return value;
 }
 
 
@@ -118,4 +133,24 @@ void loop() {
   Serial.println("Checking pump activation..");
   client.loop();
   delay(5000);
+
+  //Analog readings..
+  //sensor 1
+  int value_1 = mutiplexerReading(LOW, LOW, LOW);
+
+  //sensor 2
+  int value_2 = mutiplexerReading(LOW, HIGH, LOW);
+
+  //sensor 3
+  int value_3 = mutiplexerReading(LOW, HIGH, HIGH);
+
+  //sensor 4
+  int value_3 = mutiplexerReading(HIGH, LOW, LOW);
+
+  //sensor 5
+  int value_3 = mutiplexerReading(HIGH, LOW, HIGH);
+
+  //Send values through MQTT..
+  
+  
 }

@@ -18,7 +18,7 @@ const char* wifi_password = "W1JA3M3R2A";
 // MQTT
 // Make sure to update this for your own MQTT Broker!
 // TODO: externalize parameters!!!
-const char* mqtt_server = "192.168.1.0";
+const char* mqtt_server = "ec2-3-18-109-222.us-east-2.compute.amazonaws.com";
 const char* mqtt_moisture_topic = "moisture";
 const char* mqtt_temperature_topic = "temperature";
 const char* mqtt_sub_topic = "pump_activation";
@@ -52,24 +52,23 @@ void callback(char* topic, byte* payload, unsigned int length) {
     //Serial.print((char)payload[i]);
     string.concat((char)payload[i]);
   }
-  switch (string) {
-  case "11":
+  if(string.equals("1")) {
     digitalWrite(RelayControl1,HIGH);// NO1 and COM1 Connected (LED on)
     delay(1000);
-    break;
-  case "12":
+  /*
+  case 2:
     digitalWrite(RelayControl2,HIGH);
     delay(10000);
     digitalWrite(RelayControl2,LOW);
-  case "13":
+  case 3:
     digitalWrite(RelayControl3,HIGH);
     delay(10000);
     digitalWrite(RelayControl3,HIGH);
-  case "14":
+  case 4:
     digitalWrite(RelayControl4,HIGH);
     delay(10000);
     digitalWrite(RelayControl4,LOW);
-  case "15":
+  case 5:
     digitalWrite(RelayControl5,HIGH);
     delay(10000);
     digitalWrite(RelayControl5,LOW);
@@ -77,10 +76,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
   default:
     delay(1000);
     break;
-}
+    */
+  }
+
 }
 
-int mutiplexerReading(A, B, C) {
+int mutiplexerReading(boolean A, boolean B, boolean C) {
   digitalWrite(MultiplexerControl4, A);
   digitalWrite(MultiplexerControl3, B);
   digitalWrite(MultiplexerControl2, C);
@@ -102,7 +103,7 @@ void setup() {
   Serial.println("Connected to the WiFi network");
   
   //Configuring MQTT client
-   Serial.println("Configuring MQTT client..");
+  Serial.println("Configuring MQTT client..");
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
  
@@ -119,7 +120,7 @@ void setup() {
   }
   
   //Subscribing to MQTT queue
-  client.subscribe("pump_activation");
+  client.subscribe(mqtt_sub_topic);
 
   //Itilializing relay outputs
   pinMode(RelayControl1, OUTPUT);
@@ -143,16 +144,16 @@ void loop() {
   //sensor 3
   int value_3 = mutiplexerReading(LOW, HIGH, HIGH);
   //sensor 4
-  int value_3 = mutiplexerReading(HIGH, LOW, LOW);
+  int value_4 = mutiplexerReading(HIGH, LOW, LOW);
   //sensor 5
-  int value_3 = mutiplexerReading(HIGH, LOW, HIGH);
+  int value_5 = mutiplexerReading(HIGH, LOW, HIGH);
 
+  Serial.println(value_1);
+  /*
   //3. Send values through MQTT..
   if (client.publish(mqtt_analog_topic, value_1)) { //TODO: fix this to sendmultiple values at once
   }
   else {
-    Serial.println("Message failed to send.); 
-  
-}
-
+    Serial.println("Message failed to send."); 
+  */
 }

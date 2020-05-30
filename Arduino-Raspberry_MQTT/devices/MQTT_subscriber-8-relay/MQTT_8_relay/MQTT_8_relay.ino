@@ -31,10 +31,10 @@ const char* clientID = "ClientID";
 const char* ok_message = "ON";
 
 //relay water pump control
-int RelayControl1 = 14; // Digital Arduino Pin used to control the motor
-int RelayControl2 = 12;
-int RelayControl3 = 13;
-int RelayControl4 = 15;
+int RelayControl1 = 13; // Digital Arduino Pin used to control the motor
+int RelayControl2 = 15;
+//int RelayControl3 = 13;
+//int RelayControl4 = 15;
 
 //multiplexer control
 int MultiplexerControl4 = 2;
@@ -54,7 +54,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   if(string.equals("1")) {
     digitalWrite(RelayControl1,HIGH);// NO1 and COM1 Connected (LED on)
-    delay(1000);
+    delay(5000);
+    digitalWrite(RelayControl1,LOW);
   /*
   case 2:
     digitalWrite(RelayControl2,HIGH);
@@ -117,6 +118,7 @@ void setup() {
       Serial.print(client.state());
       delay(2000);
     }
+    
   }
   
   //Subscribing to MQTT queue
@@ -125,8 +127,14 @@ void setup() {
   //Itilializing relay outputs
   pinMode(RelayControl1, OUTPUT);
   pinMode(RelayControl2, OUTPUT);
-  pinMode(RelayControl3, OUTPUT);
-  pinMode(RelayControl4, OUTPUT);
+  //pinMode(RelayControl3, OUTPUT);
+  //pinMode(RelayControl4, OUTPUT);
+
+  //Reset relay pins
+  //digitalWrite(RelayControl1,LOW);
+  //digitalWrite(RelayControl2,LOW);
+  //digitalWrite(RelayControl3,LOW);
+  //digitalWrite(RelayControl4,LOW);
   
 }
 

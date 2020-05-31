@@ -31,10 +31,10 @@ const char* clientID = "ClientID";
 const char* ok_message = "ON";
 
 //relay water pump control
-int RelayControl1 = 13; // Digital Arduino Pin used to control the motor
-int RelayControl2 = 15;
-//int RelayControl3 = 13;
-//int RelayControl4 = 15;
+int RelayControl1 = 13; //D7 
+int RelayControl2 = 15; //D8
+int RelayControl3 = 14; //D5
+int RelayControl4 = 4; //D2
 
 //multiplexer control
 int MultiplexerControl4 = 2;
@@ -47,40 +47,41 @@ DHT dht(dht_dpin, DHTTYPE);
 
  
 void callback(char* topic, byte* payload, unsigned int length) {
+  
+  String topic_str = String(topic); //onverting from character array pointer to string
   String string = "";
-  for (int i = 0; i < length; i++) {
+  for (int i = 0; i < length; i++) { //getting received message
     //Serial.print((char)payload[i]);
     string.concat((char)payload[i]);
   }
-  if(string.equals("1")) {
-    digitalWrite(RelayControl1,HIGH);// NO1 and COM1 Connected (LED on)
-    delay(5000);
-    digitalWrite(RelayControl1,LOW);
-  /*
-  case 2:
-    digitalWrite(RelayControl2,HIGH);
-    delay(10000);
-    digitalWrite(RelayControl2,LOW);
-  case 3:
-    digitalWrite(RelayControl3,HIGH);
-    delay(10000);
-    digitalWrite(RelayControl3,HIGH);
-  case 4:
-    digitalWrite(RelayControl4,HIGH);
-    delay(10000);
-    digitalWrite(RelayControl4,LOW);
-  case 5:
-    digitalWrite(RelayControl5,HIGH);
-    delay(10000);
-    digitalWrite(RelayControl5,LOW);
-    break;
-  default:
-    delay(1000);
-    break;
-    */
+  
+  //pump activation topic
+  if(topic_str.equals(mqtt_sub_topic)){
+    Serial.println("Message received from "+topic_str+" topic, activating pump: "+string);
+    
+    if(string.equals("1")) {
+      digitalWrite(RelayControl1,HIGH);
+      delay(5000);
+      digitalWrite(RelayControl1,LOW);
+    }
+    else if(string.equals("2")) {
+      digitalWrite(RelayControl2,HIGH);
+      delay(5000);
+      digitalWrite(RelayControl2,LOW);
+    } 
+    else if(string.equals("3")) {
+      digitalWrite(RelayControl3,HIGH);
+      delay(5000);
+      digitalWrite(RelayControl3,LOW);
+    } 
+    else if(string.equals("4")) {
+      digitalWrite(RelayControl4,HIGH);
+      delay(5000);
+      digitalWrite(RelayControl4,LOW);
+    }
   }
-
 }
+
 
 int mutiplexerReading(boolean A, boolean B, boolean C) {
   digitalWrite(MultiplexerControl4, A);
@@ -90,6 +91,9 @@ int mutiplexerReading(boolean A, boolean B, boolean C) {
 
   return value;
 }
+
+
+
 
 
 void setup() {
@@ -118,7 +122,6 @@ void setup() {
       Serial.print(client.state());
       delay(2000);
     }
-    
   }
   
   //Subscribing to MQTT queue
@@ -135,8 +138,10 @@ void setup() {
   //digitalWrite(RelayControl2,LOW);
   //digitalWrite(RelayControl3,LOW);
   //digitalWrite(RelayControl4,LOW);
-  
 }
+
+
+
 
 void loop() {
   //1. 
@@ -145,6 +150,7 @@ void loop() {
   delay(5000);
 
   //2. Analog readings..
+  //2.1. Moisture sensors
   //sensor 1
   int value_1 = mutiplexerReading(LOW, LOW, LOW);
   //sensor 2
@@ -157,6 +163,7 @@ void loop() {
   int value_5 = mutiplexerReading(HIGH, LOW, HIGH);
 
   Serial.println(value_1);
+  Serial.println(value_2);
   /*
   //3. Send values through MQTT..
   if (client.publish(mqtt_analog_topic, value_1)) { //TODO: fix this to sendmultiple values at once

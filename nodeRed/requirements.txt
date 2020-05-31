@@ -1,0 +1,3 @@
+node-red-dashboard
+telegrambot
+node-red-node-mysql

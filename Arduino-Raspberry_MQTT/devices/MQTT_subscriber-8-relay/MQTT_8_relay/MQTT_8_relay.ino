@@ -4,7 +4,7 @@
 
 #define DHTTYPE DHT22
 #define PUMP D7
-#define dht_dpin D3
+//#define dht_dpin D3
 
 const int ledPin = 0; // This code uses the built-in led for visual feedback that the button has been pressed
 const int buttonPin = 13; // Connect your button to pin #13
@@ -31,19 +31,20 @@ const char* clientID = "ClientID";
 const char* ok_message = "ON";
 
 //relay water pump control
-int RelayControl1 = 13; //D7
+int RelayControl1 = 13; //D7 
 int RelayControl2 = 15; //D8
 int RelayControl3 = 14; //D5
-int RelayControl4 = 4; //D2
+int RelayControl4 = 12; //D6
+int RelayControl5 = 16; //D0
 
 //multiplexer control
-int MultiplexerControl4 = 2;
-int MultiplexerControl3 = 0;
-int MultiplexerControl2 = 4;
+int MultiplexerControl4 = 2; //D4
+int MultiplexerControl3 = 0; //D3
+int MultiplexerControl2 = 4; //D2
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-DHT dht(dht_dpin, DHTTYPE);
+//DHT dht(dht_dpin, DHTTYPE);
 
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -80,9 +81,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
       digitalWrite(RelayControl4, LOW);
     }
     else if (string.equals("5")) {
-      digitalWrite(RelayControl4, HIGH);
+      digitalWrite(RelayControl5, HIGH);
       delay(5000);
-      digitalWrite(RelayControl4, LOW);
+      digitalWrite(RelayControl5, LOW);
     }
   }
 }

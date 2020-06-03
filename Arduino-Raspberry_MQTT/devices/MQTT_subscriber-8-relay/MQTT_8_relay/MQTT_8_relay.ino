@@ -3,7 +3,7 @@
 #include <DHT.h>        // DHT11 temperature and humidity sensor Predefined library
 
 #define DHTTYPE DHT22
-#define PUMP D7
+//#define PUMP D7
 //#define dht_dpin D3
 
 const int ledPin = 0; // This code uses the built-in led for visual feedback that the button has been pressed
@@ -66,24 +66,24 @@ void callback(char* topic, byte* payload, unsigned int length) {
       digitalWrite(RelayControl1, HIGH);
     }
     else if (string.equals("2")) {
-      digitalWrite(RelayControl2, HIGH);
-      delay(5000);
       digitalWrite(RelayControl2, LOW);
+      delay(5000);
+      digitalWrite(RelayControl2, HIGH);
     }
     else if (string.equals("3")) {
-      digitalWrite(RelayControl3, HIGH);
-      delay(5000);
       digitalWrite(RelayControl3, LOW);
+      delay(5000);
+      digitalWrite(RelayControl3, HIGH);
     }
     else if (string.equals("4")) {
-      digitalWrite(RelayControl4, HIGH);
-      delay(5000);
       digitalWrite(RelayControl4, LOW);
+      delay(5000);
+      digitalWrite(RelayControl4, HIGH);
     }
     else if (string.equals("5")) {
-      digitalWrite(RelayControl5, HIGH);
-      delay(5000);
       digitalWrite(RelayControl5, LOW);
+      delay(5000);
+      digitalWrite(RelayControl5, HIGH);
     }
   }
 }
@@ -126,7 +126,7 @@ void setup() {
   Serial.begin(115200);
 
   WiFi.begin(ssid, wifi_password);
-  pinMode(PUMP, OUTPUT);       //D7 as output
+  
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.println("Connecting to WiFi..");
@@ -156,8 +156,9 @@ void setup() {
   //Itilializing relay outputs
   pinMode(RelayControl1, OUTPUT);
   pinMode(RelayControl2, OUTPUT);
-  //pinMode(RelayControl3, OUTPUT);
-  //pinMode(RelayControl4, OUTPUT);
+  pinMode(RelayControl3, OUTPUT);
+  pinMode(RelayControl4, OUTPUT);
+  pinMode(RelayControl5, OUTPUT);
 }
 
 

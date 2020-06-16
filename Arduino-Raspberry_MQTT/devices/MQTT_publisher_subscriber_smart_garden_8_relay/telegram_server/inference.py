@@ -5,16 +5,24 @@ import pickle
 import numpy as np
 import os
 import telepot
+from paho.mqtt.client import Client
+import json
+import ast
 
 BASE_DIR='/src/models'
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+BROKER = os.getenv('MQTT_BROKER')
+BROKER_USR = os.getenv('BROKER_USR')
+BROKER_PSW = os.getenv('BROKER_PSW')
+
 
 nltk.download('punkt')
 nltk.download('wordnet')
 
+client = Client(client_id = "client_telegram")
+
 from tensorflow.keras.models import load_model
 model = load_model(os.path.join(BASE_DIR, 'chatbot_model.h5'))
-import json
 import random
 intents = json.loads(open(os.path.join(BASE_DIR, 'intents.json')).read())
 words = pickle.load(open(os.path.join(BASE_DIR, 'words.pkl'),'rb'))
@@ -76,6 +84,15 @@ def on_chat_message(msg):
         #name = msg["first_name"]
         txt = msg['text']
         res=predict_response(txt)
+        with open('/src/pots.txt', 'r') as f:
+           pots_dict = json.loads(f.read())
+           pots_dict = ast.literal_eval(pots_dict)
+           for key in pots_dict.keys():
+               if key in res:
+                   msg = pots_dict[key]
+                   client.username_pw_set(BROKER_USR, password=BROKER_PSW)
+                   client.connect(BROKER,1883)
+                   ret = client.publish(topic = "pump_activation", payload = str(msg)) 
         bot.sendMessage(chat_id, res)
 
 bot = telepot.Bot(TOKEN)
@@ -86,3 +103,6 @@ print('Listening ...')
 import time
 while 1:
     time.sleep(10)
+
+print('disconnecting..')
+client.disconnect()

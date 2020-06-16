@@ -9,5 +9,6 @@ RUN pip3 install -r /src/requirements.txt
 RUN mkdir /src/Models
 
 COPY inference.py /src/inference.py
+COPY pots.txt /src/pots.txt
 
 CMD ["python3", "/src/inference.py"]

@@ -48,10 +48,30 @@ docker run -d -it --restart=unless-stopped -p 1880:1880 -v /home/pi/volume/noder
 
 ### Cofigure Node Red:
 
-Open <node_ip>:1883, then go to:
+* Install packages:
 
-Settings -> Palette -> Install tab -> node-red-node-mysql --> Install
+1. Open <node_ip>:1883, then go to:
+```console
+Settings -> Palette -> Install tab
+```
+and install packages listed in requirements.txt
 
-Import flow.json from the UI tool.
+2. Import flow.json from the UI tool.
 
+3. Authentication: 
+Open `/volume/nodered/setting.js` and uncomment the following lines: 
+```console
+adminAuth: {
+        type: "credentials",
+        users: [{
+            username: "<USER>",
+            password: "<PASSWORD>",
+            permissions: "*"
+        }]
+    },
+```
+replacing <USER> and <PASSWORD> (with base64 encoded password). Finally restart Nodered Docker image:
+```console
+docker restart mynodered
+```
 

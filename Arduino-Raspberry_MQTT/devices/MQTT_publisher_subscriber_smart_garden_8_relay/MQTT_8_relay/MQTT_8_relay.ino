@@ -185,13 +185,13 @@ void loop() {
   //sensor 1
   int value_1 = mutiplexerReading(LOW, LOW, LOW);
   //sensor 2
-  int value_2 = mutiplexerReading(HIGH, HIGH, LOW);
+  int value_2 = mutiplexerReading(LOW, LOW, HIGH);
   //sensor 3
-  int value_3 = mutiplexerReading(LOW, HIGH, HIGH);
+  int value_3 = mutiplexerReading(LOW, HIGH, LOW);
   //sensor 4
-  int value_4 = mutiplexerReading(HIGH, LOW, LOW);
+  int value_4 = mutiplexerReading(HIGH, HIGH, LOW);
   //sensor 5
-  int value_5 = mutiplexerReading(HIGH, LOW, HIGH);
+  int value_5 = mutiplexerReading(HIGH, LOW, LOW);
 
 
   //3. Send sensor values through MQTT..

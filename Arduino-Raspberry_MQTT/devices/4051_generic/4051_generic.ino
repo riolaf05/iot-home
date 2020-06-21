@@ -28,8 +28,8 @@ void setup() {
 
 void loop() {
   digitalWrite(MultiplexerControl4, HIGH); //A
-  digitalWrite(MultiplexerControl3, HIGH); //B
-  digitalWrite(MultiplexerControl2, LOW); //C
+  digitalWrite(MultiplexerControl3, LOW); //B
+  digitalWrite(MultiplexerControl2, HIGH); //C
   float moisture_value = moistureSensor(A0);
   char cstr[16];
 

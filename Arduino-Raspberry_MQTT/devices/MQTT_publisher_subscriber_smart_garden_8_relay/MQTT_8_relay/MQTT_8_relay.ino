@@ -196,13 +196,13 @@ void loop() {
   //sensor 4
   int value_4 = mutiplexerReading(HIGH, HIGH, LOW);
   //sensor 5
-  int value_5 = mutiplexerReading(HIGH, LOW, LOW);
+  int value_5 = mutiplexerReading(HIGH, LOW, HIGH);
 
 
   //3. Send sensor values through MQTT..
   String moisture_topic_str = String(mqtt_moisture_topic);
   int values[]={value_1, value_2, value_3, value_4, value_5};
-  for (int i=0; i<=4; i++) {
+  for (int i=1; i<=5; i++) {
     String moisture_topic=moisture_topic_str+"/"+i;
     char cstr[16];
     if (client.publish(moisture_topic.c_str(), itoa(values[i], cstr, 10))) { 

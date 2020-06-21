@@ -153,6 +153,11 @@ void setup() {
   //Subscribing to MQTT queue
   client.subscribe(mqtt_sub_topic);
 
+  //Initializing 4051 control pins
+  pinMode(MultiplexerControl4, OUTPUT);
+  pinMode(MultiplexerControl3, OUTPUT);
+  pinMode(MultiplexerControl2, OUTPUT);
+
   //Itilializing relay outputs
   pinMode(RelayControl1, OUTPUT);
   pinMode(RelayControl2, OUTPUT);

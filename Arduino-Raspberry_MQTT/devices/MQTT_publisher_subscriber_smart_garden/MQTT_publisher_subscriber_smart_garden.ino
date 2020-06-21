@@ -51,15 +51,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 
 float moistureSensor(char inputPin){
+    int dryValue = 1023;
+    int wetValue = 0;
+    int friendlyDryValue = 0;
+    int friendlyWetValue = 100;
     //function which calculates the moisture sensor output value
-    int sensorValue = analogRead(inputPin); //Read the analog value
-    //Serial.print("Analog value : ");
-    //Serial.println(sensorValue); //Print the value on serial monitor
-    int percentage_value = map(sensorValue,550,10,0,100);
-    Serial.print("- Moisture : ");
-    Serial.print(percentage_value + 87);
+    int rawValue = analogRead(inputPin); //Read the analog value
+    int percentage_value = map(rawValue, dryValue, wetValue, friendlyDryValue, friendlyWetValue); //Calibrazione sensore: https://greensense.github.io/Blog/2017/02/17/Arduino-Soil-Moisture-Sensor-Calibration/
+    Serial.print("Moisture pecentage: ");
+    Serial.print(percentage_value);
     Serial.println("%");
-    return percentage_value + 87;
+    return percentage_value;
 }
 
 

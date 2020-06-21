@@ -61,29 +61,29 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println("Message received from " + topic_str + " topic, activating pump: " + string);
 
     if (string.equals("1")) {
-      digitalWrite(RelayControl1, HIGH);
-      delay(5000);
       digitalWrite(RelayControl1, LOW);
+      delay(5000);
+      digitalWrite(RelayControl1, HIGH);
     }
     else if (string.equals("2")) {
-      digitalWrite(RelayControl2, HIGH);
-      delay(5000);
       digitalWrite(RelayControl2, LOW);
+      delay(5000);
+      digitalWrite(RelayControl2, HIGH);
     }
     else if (string.equals("3")) {
-      digitalWrite(RelayControl3, HIGH);
-      delay(5000);
       digitalWrite(RelayControl3, LOW);
+      delay(5000);
+      digitalWrite(RelayControl3, HIGH);
     }
     else if (string.equals("4")) {
-      digitalWrite(RelayControl4, HIGH);
-      delay(5000);
       digitalWrite(RelayControl4, LOW);
+      delay(5000);
+      digitalWrite(RelayControl4, HIGH);
     }
     else if (string.equals("5")) {
-      digitalWrite(RelayControl5, HIGH);
-      delay(5000);
       digitalWrite(RelayControl5, LOW);
+      delay(5000);
+      digitalWrite(RelayControl5, HIGH);
     }
   }
 }
@@ -160,6 +160,13 @@ void setup() {
   pinMode(RelayControl4, OUTPUT);
   pinMode(RelayControl5, OUTPUT);
 
+   //turning off relays
+  digitalWrite(RelayControl1, HIGH);
+  digitalWrite(RelayControl2, HIGH);
+  digitalWrite(RelayControl3, HIGH);
+  digitalWrite(RelayControl4, HIGH);
+  digitalWrite(RelayControl5, HIGH);
+
 }
 
 
@@ -167,13 +174,7 @@ void setup() {
 
 void loop() {
 
-  //turning off relays
-  digitalWrite(RelayControl1, LOW);
-  digitalWrite(RelayControl2, LOW);
-  digitalWrite(RelayControl3, LOW);
-  digitalWrite(RelayControl4, LOW);
-  digitalWrite(RelayControl5, LOW);
-  
+ 
   //1.
   Serial.println("Checking pump activation..");
   client.loop();

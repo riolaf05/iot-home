@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  frontend:
+    image: frontend-container:v1
+    restart: always
+    networks:
+        - apinetwork
+    expose:
+        - "8100"
+    ports:
+        - "8100:8100"
+    depends_on:
+      - nginx
+
+  backend:
+    build: .
+    restart: always
+    #volumes: ['./api:/api']
+    networks:
+      - apinetwork
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+
+  mysql:
+    build: ./nginx
+    restart: always
+    networks:
+      - apinetwork
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    links:
+      - backend:api
+
+networks:
+  apinetwork:

@@ -15,7 +15,7 @@ services:
       - nginx
 
   backend:
-    build: .
+    build: ./backend/.
     restart: always
     #volumes: ['./api:/api']
     networks:
@@ -25,15 +25,20 @@ services:
     ports:
       - "5000:5000"
 
-  mysql:
-    build: ./nginx
+  camera:
+    build: .object_detection_camera/.
     restart: always
     networks:
       - apinetwork
+    volumes:
+       - /dev/bus/usb:/dev/bus/usb
+    privileged: true
+    devices:
+       - /dev/vchiq
     expose:
-      - "80"
+      - "8000"
     ports:
-      - "80:80"
+      - "8000:8000"
     depends_on:
       - backend
     links:

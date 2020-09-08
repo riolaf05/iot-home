@@ -1,2 +1,2 @@
-docker build -t rio05docker/raspberry_container_generic:browser_camera . \
-&& docker push rio05docker/raspberry_container_generic:browser_camera
+docker build -t rio05docker/raspberry_container_camera:v1 . \
+&& docker push rio05docker/raspberry_container_camera:v1

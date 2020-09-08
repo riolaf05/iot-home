@@ -16,25 +16,11 @@ from PIL import Image
 import glob
 
 import numpy as np
-from edgetpu.detection.engine import DetectionEngine
-
-import face_replace.app as app
-import face_replace.frame_processor as frame_processor
-from face_replace.cache import Cache
-
-FACE_DETECTION_MODEL_PATH = os.path.normpath(
-    os.path.join(
-        os.getcwd(),
-        "/mobilenet_ssd_v2/mobilenet_ssd_v2_face_quant_postprocess_edgetpu.tflite",
-    )
-)
-FACE_FILTER_PATHS = glob.glob("/images/smileys/*.png")
-WINDOW_NAME = "Demo cambia-faccia"
-MAX_FACES = 6
+#from edgetpu.detection.engine import DetectionEngine
 
 # Parameters
-AUTH_USERNAME = os.environ.get('AUTH_USERNAME', 'pi')
-AUTH_PASSWORD = os.environ.get('AUTH_PASSWORD', 'picamera')
+AUTH_USERNAME = os.environ.get('AUTH_USERNAME', os.getenv('USER'))
+AUTH_PASSWORD = os.environ.get('AUTH_PASSWORD', os.getenv('PASSWORD'))
 AUTH_BASE64 = base64.b64encode('{}:{}'.format(AUTH_USERNAME, AUTH_PASSWORD).encode('utf-8'))
 BASIC_AUTH = 'Basic {}'.format(AUTH_BASE64.decode('utf-8'))
 RESOLUTION = os.environ.get('RESOLUTION', '800x600').split('x')
@@ -96,21 +82,6 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
-    '''
-    def append_objs_to_img(self, cv2_im, objs, labels):
-        height, width, channels = cv2_im.shape
-        for obj in objs:
-            x0, y0, x1, y1 = obj.bounding_box.flatten().tolist()
-            x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)
-            percent = int(100 * obj.score)
-            label = '%d%% %s' % (percent, labels[obj.label_id])
-
-            cv2_im = cv2.rectangle(cv2_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
-            cv2_im = cv2.putText(cv2_im, label, (x0, y0+30),
-                                cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
-        return cv2_im
-    '''
-
     def authorized_get(self):
         if self.path == '/':
             self.send_response(301)
@@ -131,10 +102,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
             self.end_headers()
             try:
-                face_filters = [cv2.imread(path, -1) for path in FACE_FILTER_PATHS]
                 stream_video = io.BytesIO()
-                model_faces = DetectionEngine(FACE_DETECTION_MODEL_PATH)
-                cache = Cache(face_filters)
                 frames_counter = 0
 
                 
@@ -153,7 +121,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     cv2_im = cv2.imdecode(cv2_im, 1)
                     pil_im = Image.fromarray(cv2_im)
 
-                    #Perform operations on pil_im here!
+                    #PERFORM OPERATIONS ON pil_im HERE!
 
                     r, buf = cv2.imencode(".jpg", cv2_im)
 
@@ -178,7 +146,6 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
-
 if __name__ == '__main__':
     res = '{}x{}'.format(RESOLUTION_X, RESOLUTION_Y)
 
@@ -188,7 +155,7 @@ if __name__ == '__main__':
         camera.rotation = ROTATION
 
         try:
-            address = ('', 8080)
+            address = ('', 8000)
             server = StreamingServer(address, StreamingHandler)
             server.serve_forever()
         except:

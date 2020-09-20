@@ -1,5 +1,15 @@
 #include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
+#include <DHT.h>;
+
+#define DHTPIN 7     // what pin we're connected to
+#define DHTTYPE DHT22   // DHT 22  (AM2302)
+DHT dht(DHTPIN, DHTTYPE); //// Initialize DHT sensor for normal 16mhz Arduino
+
+//Variables
+int chk;
+float hum;  //Stores humidity value
+float temp; //Stores temperature value
 
 // WiFi
 // Make sure to update this for your own WiFi network!
@@ -54,10 +64,22 @@ void setup() {
     Serial.println("Connection to MQTT Broker failed...");
   }
 
+  //Initializing DH22
+  dht.begin();
 
   // Deep sleep mode for 30 seconds, the ESP8266 wakes up by itself when GPIO 16 (D0 in NodeMCU board) is connected to the RESET pin
+  delay(2000);
+  hum = dht.readHumidity();
+  temp= dht.readTemperature();
   Serial.println("Publishing on MQTT broker..");
-  client.publish("test", "test"); //Topic name
+  if (client.publish("dh22/temp", temp)) {
+    Serial.println("Temp sent to MQTT topic!");
+  }
+  delay(2000)
+  if (client.publish("dh22/hum", hum)) {
+    Serial.println("Humidity sent to MQTT topic!");
+  }
+  delay(1000);
   ESP.deepSleep(30e6); 
 
 }

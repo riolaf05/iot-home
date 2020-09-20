@@ -53,11 +53,15 @@ void setup() {
   else {
     Serial.println("Connection to MQTT Broker failed...");
   }
+
+  Serial.println("I'm awake, but I'm going into deep sleep mode for 30 seconds");
+  ESP.deepSleep(30e6);
+  
 }
 
 
 void loop() {
-
+  /*
   long state = digitalRead(sensor);
     if(state == HIGH) {
       digitalWrite (Status, HIGH);
@@ -71,4 +75,5 @@ void loop() {
       Serial.println("Motion absent!");
       delay(1000);
       }
+      */
 }

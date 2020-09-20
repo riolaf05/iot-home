@@ -11,7 +11,7 @@ int sensor = 13;  // Digital pin D7
 
 // MQTT
 // Make sure to update this for your own MQTT Broker!
-const char* mqtt_server = "192.168.1.9";
+const char* mqtt_server = "ec2-13-59-218-106.us-east-2.compute.amazonaws.com";
 const char* mqtt_topic = "intrusion";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";

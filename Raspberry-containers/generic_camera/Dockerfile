@@ -27,7 +27,7 @@ RUN mkdir /home/scripts/camera
 
 COPY generic_browser_camera.py /home/scripts/camera/generic_browser_camera.py
 
-
+CMD ["python3", "/home/scripts/camera/generic_browser_camera.py"]
 
 
 

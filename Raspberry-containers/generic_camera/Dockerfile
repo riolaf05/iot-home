@@ -11,11 +11,6 @@ RUN apt-get install -y python3-dev
 RUN apt-get install -y python3-pip
 RUN apt-get install -y curl zip
 
-RUN pip3 install opencv-python
-RUN pip3 install picamera
-RUN pip3 install numpy
-RUN pip3 install Pillow
-
 RUN apt-get install -y libqtgui4
 #RUN modprobe bcm2835-v4l2
 RUN apt-get install -y libqt4-test
@@ -24,6 +19,10 @@ RUN apt-get install -y libilmbase-dev
 RUN apt-get install -y libopenexr-dev
 RUN apt-get install -y libgstreamer1.0-dev
 
+RUN apt-get install -y libraspberrypi0 libraspberrypi-dev libraspberrypi-doc libraspberrypi-bin
+
+COPY ./requirements.txt /home/scripts/requirements.txt
+RUN pip3 install -r /home/scripts/requirements.txt
 RUN mkdir /home/scripts/camera
 
 COPY generic_browser_camera.py /home/scripts/camera/generic_browser_camera.py

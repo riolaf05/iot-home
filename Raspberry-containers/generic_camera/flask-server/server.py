@@ -28,12 +28,21 @@ def docker():
     devices=['/dev/vchiq:rwm']
     environments=['USER={}'.format(os.getenv('USER')), 'PASSWORD={}'.format(os.getenv('PASSWORD'))]
     ports={'8000/tcp':'8000'}
-    client.containers.run("rio05docker/raspberry_container_camera:v1", "/home/scripts/camera/generic_browser_camera.py", name='camera', remove=True, privileged=True, detach=True, devices=devices, environment=environments, ports=ports)
+    client.containers.run("rio05docker/raspberry_container_camera:v1", "", name='camera', remove=True, privileged=True, detach=True, devices=devices, environment=environments, ports=ports)
     #container = client.containers.get('camera')
 
     #for line in container.logs(stream=True):
     #    print(line.strip())
-    return "Hello, {}!".format(auth.current_user())
+
+    #return "Hello, {}!".format(auth.current_user())
+    return Response(status=200)
+
+@app.route('/dockerstop')
+@auth.login_required
+def dockerstop():
+    container = client.containers.get('camera')
+    container.stop()
+    return Response(status=200)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002)

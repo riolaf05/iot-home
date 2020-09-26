@@ -1,26 +1,23 @@
-#Thanks to: https://blog.codecentric.de/en/2019/11/realtime-face-detection-and-filtering-with-the-coral-usb-accelerator/
 import os
 import io
 import time
 import base64
+import argparse
 import logging
 import socketserver
 from http import server
 from threading import Condition
+
 import picamera
-
-from imutils.video import VideoStream
-
 import cv2
 from PIL import Image
-import glob
 
 import numpy as np
-#from edgetpu.detection.engine import DetectionEngine
+from edgetpu.detection.engine import DetectionEngine
 
 # Parameters
-AUTH_USERNAME = os.environ.get('AUTH_USERNAME', os.getenv('USER'))
-AUTH_PASSWORD = os.environ.get('AUTH_PASSWORD', os.getenv('PASSWORD'))
+AUTH_USERNAME = os.environ.get('AUTH_USERNAME', 'pi')
+AUTH_PASSWORD = os.environ.get('AUTH_PASSWORD', 'picamera')
 AUTH_BASE64 = base64.b64encode('{}:{}'.format(AUTH_USERNAME, AUTH_PASSWORD).encode('utf-8'))
 BASIC_AUTH = 'Basic {}'.format(AUTH_BASE64.decode('utf-8'))
 RESOLUTION = os.environ.get('RESOLUTION', '800x600').split('x')
@@ -82,6 +79,19 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
+    def append_objs_to_img(self, cv2_im, objs, labels):
+        height, width, channels = cv2_im.shape
+        for obj in objs:
+            x0, y0, x1, y1 = obj.bounding_box.flatten().tolist()
+            x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)
+            percent = int(100 * obj.score)
+            label = '%d%% %s' % (percent, labels[obj.label_id])
+
+            cv2_im = cv2.rectangle(cv2_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
+            cv2_im = cv2.putText(cv2_im, label, (x0, y0+30),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
+        return cv2_im
+
     def authorized_get(self):
         if self.path == '/':
             self.send_response(301)
@@ -103,13 +113,10 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 stream_video = io.BytesIO()
-                frames_counter = 0
+                _, width, height, channels = engine.get_input_tensor_shape()
 
-                
                 while True:
                     # getting image
-                    frames_counter += 1
-    
                     camera.capture(stream_video, 
                                 format='jpeg', 
                                 use_video_port=True)
@@ -120,8 +127,15 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     cv2_im = np.frombuffer(stream_video.getvalue(), dtype=np.uint8)
                     cv2_im = cv2.imdecode(cv2_im, 1)
                     pil_im = Image.fromarray(cv2_im)
+                    
+                    # object detection
+                    start_ms = time.time()
+                    objs = engine.detect_with_image(pil_im, threshold=args.threshold,
+                                    keep_aspect_ratio=True, relative_coord=True,
+                                    top_k=args.top_k)
+                    elapsed_ms = time.time() - start_ms
 
-                    #PERFORM OPERATIONS ON pil_im HERE!
+                    cv2_im = self.append_objs_to_img(cv2_im, objs, labels)
 
                     r, buf = cv2.imencode(".jpg", cv2_im)
 
@@ -146,8 +160,24 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     allow_reuse_address = True
     daemon_threads = True
 
+
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', help='File path of Tflite model.', required=True)
+    parser.add_argument('--label', help='File path of label file.', required=True)
+    parser.add_argument('--top_k', type=int, default=3,
+                        help='number of classes with highest score to display')
+    parser.add_argument('--threshold', type=float, default=0.3,
+                        help='class score threshold')
+
+    args = parser.parse_args()
     res = '{}x{}'.format(RESOLUTION_X, RESOLUTION_Y)
+
+    with open(args.label, 'r') as f:
+        pairs = (l.strip().split(maxsplit=1) for l in f.readlines())
+        labels = dict((int(k), v) for k, v in pairs)
+
+    engine = DetectionEngine(args.model)
 
     with picamera.PiCamera(resolution=res, framerate=FRAMERATE, sensor_mode=2) as camera:
         camera.hflip = HFLIP

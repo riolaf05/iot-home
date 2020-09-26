@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+
+  frontend:
+    image: frontend-container:v1
+    restart: always
+    networks:
+        - apinetwork
+    expose:
+        - "8100"
+    ports:
+        - "8100:8100"
+    depends_on:
+      - nginx
+
+  backend:
+    build: ./backend/.
+    restart: always
+    #volumes: ['./api:/api']
+    networks:
+      - apinetwork
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+
+  camera:
+    build: .object_detection_camera/.
+    restart: always
+    networks:
+      - apinetwork
+    volumes:
+       - /dev/bus/usb:/dev/bus/usb
+    privileged: true
+    devices:
+       - /dev/vchiq
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - backend
+    links:
+      - backend:api
+
+networks:
+  apinetwork:

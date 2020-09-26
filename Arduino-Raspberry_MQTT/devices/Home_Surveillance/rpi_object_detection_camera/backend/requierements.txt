@@ -1,0 +1,6 @@
+docker-py
+flask
+configparser
+
+
+

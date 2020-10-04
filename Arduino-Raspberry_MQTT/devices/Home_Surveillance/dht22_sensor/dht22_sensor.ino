@@ -2,7 +2,7 @@
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
 #include <DHT.h>;
 
-#define DHTPIN 7     // what pin we're connected to
+#define DHTPIN 4     // Digital pin D2
 #define DHTTYPE DHT22   // DHT 22  (AM2302)
 DHT dht(DHTPIN, DHTTYPE); //// Initialize DHT sensor for normal 16mhz Arduino
 
@@ -16,13 +16,10 @@ float temp; //Stores temperature value
 const char* ssid = "FASTWEB-D82B93";
 const char* wifi_password = "W1JA3M3R2A";
 
-int Status = 12;  // Digital pin D6
-int sensor = 13;  // Digital pin D7
-
 // MQTT
 // Make sure to update this for your own MQTT Broker!
-const char* mqtt_server = "ec2-13-59-218-106.us-east-2.compute.amazonaws.com";
-const char* mqtt_topic = "test";
+const char* mqtt_server = "192.168.1.10";
+const char* mqtt_topic = "homeSurveillance";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
 // The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
@@ -35,8 +32,6 @@ PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port
 void setup() {
 
   Serial.begin(9600);
-  pinMode(sensor, INPUT);   // declare sensor as input
-  pinMode(Status, OUTPUT);  // declare LED as output
 
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -71,19 +66,22 @@ void setup() {
   delay(2000);
   hum = dht.readHumidity();
   temp= dht.readTemperature();
+  char cstr[16];
   Serial.println("Publishing on MQTT broker..");
-  if (client.publish("dh22/temp", temp)) {
+  
+  if (client.publish("dh22/temp", itoa(temp, cstr, 10))) {
     Serial.println("Temp sent to MQTT topic!");
   }
-  delay(2000)
-  if (client.publish("dh22/hum", hum)) {
+  delay(2000);
+  if (client.publish("dh22/hum", itoa(hum, cstr, 10))) {
     Serial.println("Humidity sent to MQTT topic!");
   }
   delay(1000);
-  ESP.deepSleep(30e6); 
+  ESP.deepSleep(3600e6); 
 
 }
 
 void loop() {
+
   
 }

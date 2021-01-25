@@ -73,11 +73,11 @@ void setup() {
   Serial.println(temp);
   Serial.println("Publishing on MQTT broker..");
   
-  if (client.publish(MQTT_PUB_TEMP, 1, true, String(temp).c_str()) {
+  if (client.publish(MQTT_PUB_TEMP, String(temp).c_str())) {
     Serial.println("Temp sent to MQTT topic!");
   }
   delay(2000);
-  if (client.publish(MQTT_PUB_HUM, 1, true, String(hum).c_str()) {
+  if (client.publish(MQTT_PUB_HUM, String(hum).c_str())) {
     Serial.println("Humidity sent to MQTT topic!");
   }
   delay(1000);

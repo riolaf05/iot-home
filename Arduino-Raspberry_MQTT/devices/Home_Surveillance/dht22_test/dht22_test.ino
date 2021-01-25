@@ -46,7 +46,7 @@ void loop() {
       timeSinceLastRead = 0;
       return;
     }
-
+    
     // Compute heat index in Fahrenheit (the default)
     float hif = dht.computeHeatIndex(f, h);
     // Compute heat index in Celsius (isFahreheit = false)

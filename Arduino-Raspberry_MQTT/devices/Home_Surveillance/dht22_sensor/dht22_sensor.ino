@@ -3,8 +3,8 @@
 #include "DHT.h"
 
 //topics
-#define MQTT_PUB_TEMP "dh22/temp"
-#define MQTT_PUB_HUM "dh22/hum"
+#define MQTT_PUB_TEMP "dht22/temp"
+#define MQTT_PUB_HUM "dht22/hum"
 
 // Uncomment one of the lines below for whatever DHT sensor type you're using!
 //#define DHTTYPE DHT11   // DHT 11

@@ -64,13 +64,8 @@ void setup() {
   //Initializing DH22
   dht.begin();
 
-  // Deep sleep mode for 30 seconds, the ESP8266 wakes up by itself when GPIO 16 (D0 in NodeMCU board) is connected to the RESET pin
   delay(2000);
-  hum = dht.readHumidity();
-  temp= dht.readTemperature();
-  char cstr[16];
-  Serial.println(hum);
-  Serial.println(temp);
+  
   Serial.println("Publishing on MQTT broker..");
   
   if (client.publish(MQTT_PUB_TEMP, String(temp).c_str())) {
@@ -80,8 +75,8 @@ void setup() {
   if (client.publish(MQTT_PUB_HUM, String(hum).c_str())) {
     Serial.println("Humidity sent to MQTT topic!");
   }
-  delay(1000);
-  ESP.deepSleep(3600e6); 
+  delay(2000);
+  ESP.deepSleep(30e6); 
 
 }
 

@@ -1,6 +1,10 @@
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
+#include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
 #include "DHT.h"
+
+//topics
+#define MQTT_PUB_TEMP "dh22/temp"
+#define MQTT_PUB_HUM "dh22/hum"
 
 // Uncomment one of the lines below for whatever DHT sensor type you're using!
 //#define DHTTYPE DHT11   // DHT 11
@@ -11,7 +15,12 @@
 const char* ssid = "FASTWEB-D82B93";  // Enter SSID here
 const char* password = "W1JA3M3R2A";  //Enter Password here
 
-ESP8266WebServer server(80);
+// MQTT
+// Make sure to update this for your own MQTT Broker!
+const char* mqtt_server = "192.168.1.124";
+const char* mqtt_username = "rio";
+const char* mqtt_password = "onslario89";
+const char* clientID = "Client ID";
 
 // DHT Sensor
 uint8_t DHTPin = 4; 
@@ -45,52 +54,36 @@ void setup() {
   Serial.println("WiFi connected..!");
   Serial.print("Got IP: ");  Serial.println(WiFi.localIP());
 
-  server.on("/", handle_OnConnect);
-  server.onNotFound(handle_NotFound);
-
-  server.begin();
-  Serial.println("HTTP server started");
-
 }
+
 void loop() {
-  
-  server.handleClient();
-  
-}
 
-void handle_OnConnect() {
+  // Initialise the WiFi and MQTT Client objects
+  WiFiClient wifiClient;
+  PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
 
- Temperature = dht.readTemperature(); // Gets the values of the temperature
+  // Connect to MQTT Broker
+  // client.connect returns a boolean value to let us know if the connection was successful.
+  // If the connection is failing, make sure you are using the correct MQTT Username and Password (Setup Earlier in the Instructable)
+  if (client.connect(clientID, mqtt_username, mqtt_password)) {
+    Serial.println("Connected to MQTT Broker!");
+  }
+  else {
+    Serial.println("Connection to MQTT Broker failed...");
+  }
+  
+  Temperature = dht.readTemperature(); // Gets the values of the temperature
   Humidity = dht.readHumidity(); // Gets the values of the humidity 
-  server.send(200, "text/html", SendHTML(Temperature,Humidity)); 
-}
-
-void handle_NotFound(){
-  server.send(404, "text/plain", "Not found");
-}
-
-String SendHTML(float Temperaturestat,float Humiditystat){
-  String ptr = "<!DOCTYPE html> <html>\n";
-  ptr +="<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
-  ptr +="<title>ESP8266 Weather Report</title>\n";
-  ptr +="<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
-  ptr +="body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;}\n";
-  ptr +="p {font-size: 24px;color: #444444;margin-bottom: 10px;}\n";
-  ptr +="</style>\n";
-  ptr +="</head>\n";
-  ptr +="<body>\n";
-  ptr +="<div id=\"webpage\">\n";
-  ptr +="<h1>ESP8266 NodeMCU Weather Report</h1>\n";
+  Serial.println(Temperature);
+  Serial.println(Humidity);
   
-  ptr +="<p>Temperature: ";
-  ptr +=(int)Temperaturestat;
-  ptr +=" gradi C</p>";
-  ptr +="<p>Humidity: ";
-  ptr +=(int)Humiditystat;
-  ptr +="%</p>";
-  
-  ptr +="</div>\n";
-  ptr +="</body>\n";
-  ptr +="</html>\n";
-  return ptr;
+  if (client.publish(MQTT_PUB_TEMP, String(Temperature).c_str())) {
+    Serial.println("Temp sent to MQTT topic!");
+  }
+  delay(2000);
+  if (client.publish(MQTT_PUB_HUM, String(Humidity).c_str())) {
+    Serial.println("Humidity sent to MQTT topic!");
+  }
+  delay(2000);
+
 }

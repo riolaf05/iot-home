@@ -1,55 +1,62 @@
-#include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
+#include <ESP8266WiFi.h>
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
-#include <DHT.h>;
+#include "DHT.h"
 
+//topics
 #define MQTT_PUB_TEMP "dh22/temp"
 #define MQTT_PUB_HUM "dh22/hum"
 
-#define DHTPIN 4     // Digital pin D2
-#define DHTTYPE DHT22   // DHT 22  (AM2302)
-DHT dht(DHTPIN, DHTTYPE); //// Initialize DHT sensor for normal 16mhz Arduino
+// Uncomment one of the lines below for whatever DHT sensor type you're using!
+//#define DHTTYPE DHT11   // DHT 11
+//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 
-//Variables
-int chk;
-float hum;  //Stores humidity value
-float temp; //Stores temperature value
-
-// WiFi
-// Make sure to update this for your own WiFi network!
-const char* ssid = "FASTWEB-D82B93";
-const char* wifi_password = "W1JA3M3R2A";
+/*Put your SSID & Password*/
+const char* ssid = "FASTWEB-D82B93";  // Enter SSID here
+const char* password = "W1JA3M3R2A";  //Enter Password here
 
 // MQTT
 // Make sure to update this for your own MQTT Broker!
 const char* mqtt_server = "192.168.1.124";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
-// The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
 const char* clientID = "Client ID";
 
-// Initialise the WiFi and MQTT Client objects
-WiFiClient wifiClient;
-PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
+// DHT Sensor
+uint8_t DHTPin = 4; 
+               
+// Initialize DHT sensor.
+DHT dht(DHTPin, DHTTYPE);                
 
+float Temperature;
+float Humidity;
+ 
 void setup() {
+  Serial.begin(115200);
+  delay(100);
+  
+  pinMode(DHTPin, INPUT);
 
-  Serial.begin(9600);
+  dht.begin();              
 
-  Serial.print("Connecting to ");
+  Serial.println("Connecting to ");
   Serial.println(ssid);
 
-  // Connect to the WiFi
-  WiFi.begin(ssid, wifi_password);
+  //connect to your local wi-fi network
+  WiFi.begin(ssid, password);
 
-  // Wait until the connection has been confirmed before continuing
+  //check wi-fi is connected to wi-fi network
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  delay(1000);
+  Serial.print(".");
   }
-  // Debugging - Output the IP Address of the ESP8266
-  Serial.println("WiFi connected");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+  Serial.println("");
+  Serial.println("WiFi connected..!");
+  Serial.print("Got IP: ");  Serial.println(WiFi.localIP());
+
+  // Initialise the WiFi and MQTT Client objects
+  WiFiClient wifiClient;
+  PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
 
   // Connect to MQTT Broker
   // client.connect returns a boolean value to let us know if the connection was successful.
@@ -60,27 +67,25 @@ void setup() {
   else {
     Serial.println("Connection to MQTT Broker failed...");
   }
-
-  //Initializing DH22
-  dht.begin();
-
-  delay(2000);
   
-  Serial.println("Publishing on MQTT broker..");
+  Temperature = dht.readTemperature(); // Gets the values of the temperature
+  Humidity = dht.readHumidity(); // Gets the values of the humidity 
+  Serial.println(Temperature);
+  Serial.println(Humidity);
   
-  if (client.publish(MQTT_PUB_TEMP, String(temp).c_str())) {
+  if (client.publish(MQTT_PUB_TEMP, String(Temperature).c_str())) {
     Serial.println("Temp sent to MQTT topic!");
   }
   delay(2000);
-  if (client.publish(MQTT_PUB_HUM, String(hum).c_str())) {
+  if (client.publish(MQTT_PUB_HUM, String(Humidity).c_str())) {
     Serial.println("Humidity sent to MQTT topic!");
   }
   delay(2000);
-  ESP.deepSleep(30e6); 
+
+  ESP.deepSleep(3600e6);
 
 }
 
 void loop() {
 
-  
 }

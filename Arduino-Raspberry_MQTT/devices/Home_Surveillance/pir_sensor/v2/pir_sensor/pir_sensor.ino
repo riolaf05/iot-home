@@ -1,4 +1,4 @@
-w pir se#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
 
 //topics

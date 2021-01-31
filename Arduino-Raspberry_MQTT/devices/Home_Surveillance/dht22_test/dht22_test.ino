@@ -3,8 +3,8 @@
 #include "DHT.h"
 
 //topics
-#define MQTT_PUB_TEMP "dht22/temp"
-#define MQTT_PUB_HUM "dht22/hum"
+#define MQTT_PUB_TEMP "dh22/temp"
+#define MQTT_PUB_HUM "dh22/hum"
 
 // Uncomment one of the lines below for whatever DHT sensor type you're using!
 //#define DHTTYPE DHT11   // DHT 11
@@ -17,7 +17,7 @@ const char* password = "W1JA3M3R2A";  //Enter Password here
 
 // MQTT
 // Make sure to update this for your own MQTT Broker!
-const char* mqtt_server = "192.168.1.12";
+const char* mqtt_server = "192.168.1.124";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
 const char* clientID = "Client ID";
@@ -54,9 +54,13 @@ void setup() {
   Serial.println("WiFi connected..!");
   Serial.print("Got IP: ");  Serial.println(WiFi.localIP());
 
+}
+
+void loop() {
+
   // Initialise the WiFi and MQTT Client objects
   WiFiClient wifiClient;
-  PubSubClient client(mqtt_server, 31085, wifiClient); // 1883 is the listener port for the Broker
+  PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
 
   // Connect to MQTT Broker
   // client.connect returns a boolean value to let us know if the connection was successful.
@@ -81,11 +85,5 @@ void setup() {
     Serial.println("Humidity sent to MQTT topic!");
   }
   delay(2000);
-
-  ESP.deepSleep(3600e6);
-
-}
-
-void loop() {
 
 }

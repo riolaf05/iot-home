@@ -52,7 +52,7 @@ void setup() {
 
   // Initialise the WiFi and MQTT Client objects
   WiFiClient wifiClient;
-  PubSubClient client(mqtt_server, 31085, wifiClient); // 1883 is the listener port for the Broker
+  PubSubClient client(mqtt_server, 31085, wifiClient); // 1883 is the default listener port for the Broker
 
   //Fase di calibrazione
   Serial.print("Calibrazione del sensore ");
@@ -63,7 +63,6 @@ void setup() {
   Serial.println(" Fatto");
   Serial.println("SENSORE ATTIVO");
   delay(50);
-}
 
   // Connect to MQTT Broker
   // client.connect returns a boolean value to let us know if the connection was successful.
@@ -74,15 +73,17 @@ void setup() {
   else {
     Serial.println("Connessione al broker MQTT fallita...");
   }
+  
+  }
+
+  
 
 void loop() {
   
 
   // Questo IF permette di stabilre se il sensore rileva un oggetto in movimento
   if (digitalRead(sensor) == HIGH) {
-
-    if (client.publish(MQTT_PUB_PIR, "ON") {
-        Serial.println("Intrusione rilevata!");
+    client.publish(MQTT_PUB_PIR, "ON");
       }
   
     if (lockLow) {

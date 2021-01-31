@@ -1,3 +1,4 @@
 node-red-dashboard
 node-red-contrib-telegrambot
 node-red-node-mysql
+node-red-contrib-ui-led

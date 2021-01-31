@@ -1,6 +1,9 @@
 #include <ESP8266WiFi.h> // Enables the ESP8266 to connect to the local network (via WiFi)
 #include <PubSubClient.h> // Allows us to connect to, and publish to the MQTT broker
 
+//topics
+#define MQTT_PUB_PIR "pir/alert"
+
 // WiFi
 // Make sure to update this for your own WiFi network!
 const char* ssid = "FASTWEB-D82B93";
@@ -11,8 +14,8 @@ int sensor = 13;  // Digital pin D7
 
 // MQTT
 // Make sure to update this for your own MQTT Broker!
-const char* mqtt_server = "ec2-13-59-218-106.us-east-2.compute.amazonaws.com";
-const char* mqtt_topic = "intrusion";
+const char* mqtt_server = "192.168.1.12";
+const char* mqtt_topic = "pir/alert";
 const char* mqtt_username = "rio";
 const char* mqtt_password = "onslario89";
 // The client id identifies the ESP8266 device. Think of it a bit like a hostname (Or just a name, like Greg).
@@ -20,7 +23,7 @@ const char* clientID = "Client ID";
 
 // Initialise the WiFi and MQTT Client objects
 WiFiClient wifiClient;
-PubSubClient client(mqtt_server, 1883, wifiClient); // 1883 is the listener port for the Broker
+PubSubClient client(mqtt_server, 31085, wifiClient); // 1883 is the listener port for the Broker
 
 void setup() {
 
@@ -62,13 +65,13 @@ void loop() {
   long state = digitalRead(sensor);
     if(state == HIGH) {
       digitalWrite (Status, HIGH);
-      client.publish("intrusion", "ON"); //Topic name
+      client.publish(MQTT_PUB_PIR, "true"); //Topic name
       Serial.println("Motion detected!");
-      delay(15000);
+      delay(10000);
     }
     else {
       digitalWrite (Status, LOW);
-      client.publish("intrusion", "OFF"); //Topic name
+      client.publish(MQTT_PUB_PIR, "false"); //Topic name
       Serial.println("Motion absent!");
       delay(1000);
       }
